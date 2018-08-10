@@ -454,7 +454,7 @@ def run_randforest(X_train,y_train,X_test,y_test,name):
     #        min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
     #        oob_score=False, random_state=0, verbose=0, warm_start=False)
 
-    print(regr.predict([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]))
+    # print(regr.predict([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]))
     y_predRF=regr.predict(X_test)
     my_metrics(y_test,y_predRF,name)
 
@@ -518,7 +518,7 @@ def run_gradientboost(X_train,y_train,X_test,y_test,name):
     print("MSE: %.4f" %mse)
     # print("My GBR Score : %.4f",my_metric(y_test,y_predGBR))
 
-    print(gbr.predict([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]))
+    # print(gbr.predict([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]))
     y_pred=gbr.predict(X_test)
     my_metrics(y_test,y_pred,name)
 
@@ -582,6 +582,13 @@ def run_linreg(X_train,y_train,X_test,y_test,name):
     my_metrics(y_test,y_predOLS,name)
     regr_plot(y_test,y_predOLS,name)
 
+    dfupdt=X_test.copy()
+    dfupdt['actuals']=y_test
+    dfupdt['predicted']=y_predOLS
+    dfupdt['resid']=dfupdt.actuals-dfupdt.predicted
+    # return(dfupdt)
+
+
 def create_time_database():
     pass
 
@@ -597,9 +604,9 @@ if __name__ == '__main__':
     X_test= pd.read_pickle('pklz/price_split/X_lt_test.pkl')
     y_test= pd.read_pickle('pklz/price_split/y_lt_test.pkl') 
 
-    run_linreg(X_train,y_train,X_test,y_test,'OLS_LinReg_lt500_DSET')
-    run_randforest(X_train,y_train,X_test,y_test,'RandForrest_lt500_DSET')
-    run_gradientboost(X_train,y_train,X_test,y_test,'GradBoost_lt500_DSET')
+    run_linreg(X_train,y_train,X_test,y_test,'OLS_LinReg_lt500')
+    run_randforest(X_train,y_train,X_test,y_test,'RandForrest_lt500')
+    run_gradientboost(X_train,y_train,X_test,y_test,'GradBoost_lt500')
 
     # Running TimeSeries
     trainlist = ['listings_20180304.csv.gz','listings_20180406.csv.gz','listings_20180509.csv.gz']
@@ -632,6 +639,6 @@ if __name__ == '__main__':
     # X_test= pd.read_pickle('pklz/times_split/X_test.pkl')
     # y_test= pd.read_pickle('pklz/times_split/y_test.pkl') 
 
-    run_linreg(X_train,y_train,X_test,y_test,'OLS_LinReg_time0705_DSET')
-    run_randforest(X_train,y_train,X_test,y_test,'RandForrest_time0705_DSET')
-    run_gradientboost(X_train,y_train,X_test,y_test,'GradBoost_time0705_DSET')
+    run_linreg(X_train,y_train,X_test,y_test,'OLS_LinReg_time0705')
+    run_randforest(X_train,y_train,X_test,y_test,'RandForrest_time0705')
+    run_gradientboost(X_train,y_train,X_test,y_test,'GradBoost_time0705')
