@@ -65,9 +65,9 @@ def read_data():
 
     return(listd)
 
-def process_data(listd):
+def process_data(listd,dropzips):
     print('\nPROCESSING INPUT DATASET .................')
-    print(df.head())
+    # print(listd.head())
 
     #!!! APPLY the same for the test data also
 
@@ -149,7 +149,12 @@ def process_data(listd):
     listd.loc[listd['property_type']=='Loft', 'ppt_condensed'] = 'room'
 
     listd=create_dummies(listd,'ppt_condensed')
-    listd=create_dummies(listd,'zipcode')
+
+    if(dropzips):
+        listd.drop('zipcode',axis=1,inplace=True)
+    else:
+        listd=listd[listd.zipcode!='-- default zip code --']
+        listd=create_dummies(listd,'zipcode')
 
     #imputing some more missing values
     listd['cleaning_fee'].fillna(0, inplace=True)
@@ -577,9 +582,6 @@ def run_linreg(X_train,y_train,X_test,y_test,name):
     my_metrics(y_test,y_predOLS,name)
     regr_plot(y_test,y_predOLS,name)
 
-def read_times_data():
-    pass
-
 def create_time_database():
     pass
 
@@ -587,7 +589,7 @@ if __name__ == '__main__':
     init()
 
     # df = read_data()
-    # df = process_data(df)
+    # df = process_data(df,0)
     # create_database(df)
 
     X_train= pd.read_pickle('pklz/price_split/X_lt_train.pkl')
@@ -600,17 +602,36 @@ if __name__ == '__main__':
     run_gradientboost(X_train,y_train,X_test,y_test,'GradBoost_lt500_DSET')
 
     # Running TimeSeries
-    # df_train=read_times_data()
-    # df_test=read_times_data()
-    # df_train=process_data(df_train)
-    # df_test=process_data(df_test)
-    # create_time_database(df_train,df_test)
+    trainlist = ['listings_20180304.csv.gz','listings_20180406.csv.gz','listings_20180509.csv.gz']
+    testlist = ['listings_20180705.csv.gz']
+    df_train = pd.concat([pd.read_csv(fcsv) for fcsv in trainlist],ignore_index=True)
+    df_test = pd.concat([pd.read_csv(fcsv) for fcsv in testlist],ignore_index=True)
+    # print('Shape of data after reading :',df_train.shape,df_test.shape)
+    df_train=process_data(df_train,1)
+    df_test=process_data(df_test,1)
+    # print('Shape of data after cleaning :',df_train.shape,df_test.shape)
+    # print('HEAD of data after cleaning :',df_train.head().T,df_test.head().T)
+    # print('Colums of data after cleaning :',df_train.columns,df_test.columns)
 
+    df_train=df_train[df_train.price<500]
+    df_test=df_test[df_test.price<500]
+
+
+    y_train= df_train.price
+    X_train= df_train.copy()
+    X_train=X_train.drop(['price'],axis=1)
+    y_test= df_test.price
+    X_test= df_test.copy()
+    X_test=X_test.drop(['price'],axis=1)
+
+
+
+    # create_time_database(df_train,df_test)
     # X_train= pd.read_pickle('pklz/times_split/X_train.pkl')
     # y_train= pd.read_pickle('pklz/times_split/y_train.pkl')
     # X_test= pd.read_pickle('pklz/times_split/X_test.pkl')
     # y_test= pd.read_pickle('pklz/times_split/y_test.pkl') 
 
-    # run_linreg(X_train,y_train,X_test,y_test,'OLS_LinReg_lt500_DSET')
-    # run_randforest(X_train,y_train,X_test,y_test,'RandForrest_lt500_DSET')
-    # run_gradientboost(X_train,y_train,X_test,y_test,'GradBoost_lt500_DSET')
+    run_linreg(X_train,y_train,X_test,y_test,'OLS_LinReg_time0705_DSET')
+    run_randforest(X_train,y_train,X_test,y_test,'RandForrest_time0705_DSET')
+    run_gradientboost(X_train,y_train,X_test,y_test,'GradBoost_time0705_DSET')
