@@ -1,8 +1,11 @@
 import numpy as np
 import pandas as pd
 import pickle
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 # %matplotlib inline
+
 
 from sklearn.model_selection import train_test_split
 from sklearn import datasets, linear_model
