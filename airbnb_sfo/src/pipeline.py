@@ -10,9 +10,9 @@ from sklearn.metrics import  mean_squared_error, r2_score
 from collections import Counter
 
 from sklearn.ensemble import RandomForestRegressor
-# from sklearn.datasets import make_regression
-
 from sklearn.ensemble import GradientBoostingRegressor
+
+from sklearn.model_selection import RandomizedSearchCV
 
 import statsmodels.api as sm
 
@@ -231,15 +231,15 @@ def create_database(dfclean):
     X_test.to_pickle('pklz/price_split/X_gt_test.pkl')
     y_test.to_pickle('pklz/price_split/y_gt_test.pkl')
 
-
-def regr_plot(y_act,y_pred,mdl_data):
+def del_regr_plot(y_act,y_pred,mdl_data):
     #Building Residual DF
 
     dfpred= y_act.to_frame()
     dfpred['preds'] = y_pred
     dfpred['resid'] = dfpred.preds-dfpred.price
-    dfpred['residpct'] = (dfpred.preds-dfpred.price)/dfpred.price
+    dfpred['residpct'] = (dfpred.preds-dfpred.price)/dfpred.price*100
     # dfpred.head()
+    resids=y_pred-y_test
 
     fig = plt.figure(figsize=(18,5))
     ax1 = fig.add_subplot(1,3,1)
@@ -248,17 +248,53 @@ def regr_plot(y_act,y_pred,mdl_data):
 
     ax1.scatter(y_act, y_pred,  color='black')
     ax1.set_title('act_vs_pred')
-    ax1.set_xlabel('ACT-PRICE')
+    ax1.set_xlabel('PRICE')
     ax1.set_ylabel('PREDICT')
 
-    ax2.scatter(dfpred.price,dfpred.resid, color='red')
-    ax2.set_title('RESIDUALS')
+    ax2.scatter(y_act,resids, color='red')
+    ax2.set_title('RESIDUALS',)
     ax2.set_xlabel('PRICE')
     ax2.set_ylabel('RESIDUAL')
 
-    ax3.scatter(dfpred.price,dfpred.residpct, color='blue')
+    ax3.scatter(y_act,resids/y_test*100, color='blue')
     ax3.set_title('RESIDUAL PCT')
     ax3.set_xlabel('PRICE')
+    ax3.set_ylabel('RESIDUAL PCT')
+
+    fig.suptitle('mdl_data', fontsize=12, y=1.2)
+    fig.tight_layout()
+
+    fig1 = plt.gcf()
+    fig1.savefig('plots/'+'RESI_'+mdl_data+'.png', format='png')
+
+def regr_plot(y_act,y_pred,mdl_data):
+    #Building Residual DF
+
+    dfpred= y_act.to_frame()
+    dfpred['preds'] = y_pred
+    dfpred['resid'] = dfpred.preds-dfpred.price
+    dfpred['residpct'] = (dfpred.preds-dfpred.price)/dfpred.price*100
+    # dfpred.head()
+    resids=y_pred-y_test
+
+    fig = plt.figure(figsize=(18,5))
+    ax1 = fig.add_subplot(1,3,1)
+    ax2 = fig.add_subplot(1,3,2)
+    ax3 = fig.add_subplot(1,3,3)
+
+    ax1.scatter(y_pred, y_act,  color='black')
+    ax1.set_title('act_vs_pred')
+    ax1.set_xlabel('PREDICT')
+    ax1.set_ylabel('PRICE')
+
+    ax2.scatter(y_pred,resids, color='red')
+    ax2.set_title('RESIDUALS',)
+    ax2.set_xlabel('PREDICT')
+    ax2.set_ylabel('RESIDUAL')
+
+    ax3.scatter(y_pred,resids/y_test*100, color='blue')
+    ax3.set_title('RESIDUAL PCT')
+    ax3.set_xlabel('PREDICT')
     ax3.set_ylabel('RESIDUAL PCT')
 
     fig.suptitle('mdl_data', fontsize=12, y=1.2)
@@ -279,7 +315,6 @@ def plot_feature_importance(featurelist,featureimp,name):
     fig.tight_layout()
     fig1 = plt.gcf()
     fig1.savefig('plots/'+'FI_'+name+'.png', format='png')
-
 
 def xtra():
 
@@ -360,7 +395,7 @@ def my_metrics(y_act,y_pred,mdl_data):
     accy=100-np.mean(mape)
     #Mean Absolute Error 
     
-    print('\n**************** Metrics for : ',mdl_data,' *******************')
+    print('\n   **************** Metrics for : ',mdl_data,' *******************')
     print("   R2 (Variance Squared ERROR)                   = %.4f"%r2)
     print("   MSE (Mean Squared ERROR)                      = %.4f"%mse)
     print("   RMSE (ROOT Mean Squared ERROR)                = %.4f"%rmse)
@@ -371,23 +406,45 @@ def my_metrics(y_act,y_pred,mdl_data):
     print("   Predicted Mean Absolute Error                 =",np.mean(residuals))
     print("   Accuracy  (100-MAPE mean absolute PCT ERR)    =",round(accy,2), '%')
 
-    print('\n**************** -------------------------- *******************',len(y_act), mse_prop)
+    print('\n   **************** -------------------------- *******************',len(y_act), mse_prop)
     # print(len(y_act), mse_prop)
 
     # regr_plot(y_act,y_pred,mdl_data)
     return(r2,rmse,rmsle,mspct)
 
+def evaluate(model, test_features, test_labels):
+    #EVALUATE THE RANDOM SEARCH BEST PARAMETERS
+    predictions = model.predict(test_features)
+    rfcv_score = model.score(test_features, test_labels)
+    errors = abs(predictions - test_labels)
+    mape = 100 * np.mean(errors / test_labels)
+    accuracy = 100 - mape
+    # print('Model Performance')
+    print('   R2 Score = {:0.2f}.'.format(rfcv_score))
+    print('   Average Error: {:0.4f}'.format(np.mean(errors)))
+    print('   Accuracy = {:0.2f}%.'.format(accuracy))
+    # print('   My R2 Score is : ',my_metric(test_labels,predictions))
+    return(accuracy)
+
+def estimate_tree(mdl,X_train, y_train,X_test,y_test):
+    treelist=[1,5,10,15,25,50,100,150,200,250,300,400,500,700,900]
+    for trees in treelist:
+    # for trees in range(25,300,25):
+        mdl.n_estimators = trees
+        mdl.fit(X_train, y_train)
+        print('         ',trees, mdl.score(X_test,y_test))
+
 def run_randforest(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING RANDOM FOREST .................  :',name)
 
-    regr = RandomForestRegressor(max_depth=2, random_state=0)
+    regr = RandomForestRegressor(random_state=0)
     regr.fit(X_train, y_train)
-    RandomForestRegressor(bootstrap=True, criterion='mse', max_depth=25,
-           max_features='auto', max_leaf_nodes=None,
-           min_impurity_decrease=0.0, min_impurity_split=None,
-           min_samples_leaf=1, min_samples_split=2,
-           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
-           oob_score=False, random_state=0, verbose=0, warm_start=False)
+    # RandomForestRegressor(bootstrap=True, criterion='mse', max_depth=25,
+    #        max_features='auto', max_leaf_nodes=None,
+    #        min_impurity_decrease=0.0, min_impurity_split=None,
+    #        min_samples_leaf=1, min_samples_split=2,
+    #        min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+    #        oob_score=False, random_state=0, verbose=0, warm_start=False)
 
     print(regr.predict([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]))
     y_predRF=regr.predict(X_test)
@@ -398,6 +455,43 @@ def run_randforest(X_train,y_train,X_test,y_test,name):
     plot_feature_importance(featurelist,featureimp,name)
     regr_plot(y_test,y_predRF,name)
 
+    estimate_tree(regr,X_train, y_train,X_test,y_test)
+
+    # Random Hyper Parameter Grid
+    
+    # n_estimators = [int(x) for x in np.linspace(start = 200, stop = 2000, num = 10)] # Number of trees in random forest    
+    n_estimators = [200] # Number of trees in random forest    
+    max_features = ['auto', 'sqrt'] # Number of features to consider at every split
+    max_depth = [int(x) for x in np.linspace(10, 110, num = 11)] # Maximum number of levels in tree
+    max_depth.append(None)    
+    min_samples_split = [2, 5, 10] # Minimum number of samples required to split a node    
+    min_samples_leaf = [1, 2, 4] # Minimum number of samples required at each leaf node    
+    bootstrap = [True, False] # Method of selecting samples for training each tree    
+    random_grid = {'n_estimators': n_estimators,
+               'max_features': max_features,
+               'max_depth': max_depth,
+               'min_samples_split': min_samples_split,
+               'min_samples_leaf': min_samples_leaf,
+               'bootstrap': bootstrap}
+    # print(random_grid)
+
+    # Use the random grid to search for best hyperparameters
+        # Random search of parameters, using 3 fold cross validation, 
+        # search across 100 different combinations, and use all available cores
+    rf = RandomForestRegressor() # First create the base model to tune
+    rf_random = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 100, cv = 3, verbose=1, random_state=42, n_jobs = -1)
+    rf_random.fit(X_train, y_train) # Fit the random search model
+    print(rf_random.best_params_)
+    print(rf_random.best_score_)
+
+    print("   ********************* BASE MODEL Performance *********************")
+    base_model = RandomForestRegressor(n_estimators = 10, random_state = 42)
+    base_model.fit(X_train, y_train)
+    base_accuracy = evaluate(base_model, X_test, y_test)
+    print("   ********************* RANDOM MODEL Performance *********************")
+    best_random = rf_random.best_estimator_
+    random_accuracy = evaluate(best_random, X_test, y_test)
+    print('Improvement of {:0.2f}%.'.format( 100 * (random_accuracy - base_accuracy) / base_accuracy))
 
 
 
@@ -405,6 +499,7 @@ def run_gradientboost(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING GRADIENT BOOST REGRESSION .................  :',name)
     params = {'n_estimators': 500, 'max_depth': 4, 'min_samples_split': 2,\
           'learning_rate': 0.01, 'loss': 'ls', 'random_state':0}
+    params = {'random_state':0}
 
     gbr = GradientBoostingRegressor(**params)
     # gbr = GradientBoostingRegressor(max_depth=2, random_state=0)
@@ -424,9 +519,44 @@ def run_gradientboost(X_train,y_train,X_test,y_test,name):
     plot_feature_importance(featurelist,featureimp,name)
     regr_plot(y_test,y_pred,name)
 
+    estimate_tree(gbr,X_train, y_train,X_test,y_test)
 
+    # Gradient Hyper Parameter Grid - Random
 
+    # Number of trees in random forest
+    # n_estimators = [int(x) for x in np.linspace(start = 200, stop = 2000, num = 10)]
+    n_estimators = [500] # Number of trees in random forest
+    max_features = ['auto', 'sqrt'] # Number of features to consider at every split
+    max_depth = [int(x) for x in np.linspace(10, 110, num = 11)] # Maximum number of levels in tree
+    max_depth.append(None) # Minimum number of samples required to split a node
+    min_samples_split = [2, 5, 10] # Minimum number of samples required at each leaf node
+    min_samples_leaf = [1, 2, 4] # Method of selecting samples for training each tree    
+    alpha = [float(x) for x in np.linspace(start = 0.01, stop = 0.1, num = 5)] # Learning Rate
+    random_grid = {'n_estimators': n_estimators,
+                'max_features': max_features,
+                'max_depth': max_depth,
+                'min_samples_split': min_samples_split,
+                'min_samples_leaf': min_samples_leaf,
+                'learning_rate': alpha}
+    # print(random_grid)
 
+    # Random search of parameters, using 3 fold cross validation, 
+    # search across 100 different combinations, and use all available cores
+    gbreg = GradientBoostingRegressor()
+    gbreg_random = RandomizedSearchCV(estimator = gbreg, param_distributions = random_grid, n_iter = 100, cv = 3, verbose=1, random_state=42, n_jobs = -1)
+    gbreg_random.fit(X_train, y_train)
+    print(gbreg_random.best_params_)
+    print(gbreg_random.best_score_)
+
+    print("   ********************* BASE MODEL Performance *********************")
+    base_model = GradientBoostingRegressor(**params)
+    base_model.fit(X_train, y_train)
+    base_accuracy = evaluate(base_model, X_test, y_test)
+
+    print("   ********************* RANDOM MODEL Performance *********************")
+    best_random = gbreg_random.best_estimator_
+    random_accuracy = evaluate(best_random, X_test, y_test)
+    print('   Improvement of {:0.2f}%.'.format( 100 * (random_accuracy - base_accuracy) / base_accuracy))
 
 def run_linreg(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING LINEAR REGRESSION .................  : ',name)   
@@ -444,7 +574,11 @@ def run_linreg(X_train,y_train,X_test,y_test,name):
     my_metrics(y_test,y_predOLS,name)
     regr_plot(y_test,y_predOLS,name)
 
+def read_times_data():
+    pass
 
+def create_time_database():
+    pass
 
 if __name__ == '__main__':
     init()
@@ -458,6 +592,22 @@ if __name__ == '__main__':
     X_test= pd.read_pickle('pklz/price_split/X_lt_test.pkl')
     y_test= pd.read_pickle('pklz/price_split/y_lt_test.pkl') 
 
-    run_linreg(X_train,y_train,X_test,y_test,'OLS_LinReg_lt500_Dataset')
-    run_randforest(X_train,y_train,X_test,y_test,'RF_lt500_Dataset')
-    run_gradientboost(X_train,y_train,X_test,y_test,'GB_lt500_Dataset')
+    run_linreg(X_train,y_train,X_test,y_test,'OLS_LinReg_lt500_DSET')
+    run_randforest(X_train,y_train,X_test,y_test,'RandForrest_lt500_DSET')
+    run_gradientboost(X_train,y_train,X_test,y_test,'GradBoost_lt500_DSET')
+
+    # Running TimeSeries
+    # df_train=read_times_data()
+    # df_test=read_times_data()
+    # df_train=process_data(df_train)
+    # df_test=process_data(df_test)
+    # create_time_database(df_train,df_test)
+
+    # X_train= pd.read_pickle('pklz/times_split/X_train.pkl')
+    # y_train= pd.read_pickle('pklz/times_split/y_train.pkl')
+    # X_test= pd.read_pickle('pklz/times_split/X_test.pkl')
+    # y_test= pd.read_pickle('pklz/times_split/y_test.pkl') 
+
+    # run_linreg(X_train,y_train,X_test,y_test,'OLS_LinReg_lt500_DSET')
+    # run_randforest(X_train,y_train,X_test,y_test,'RandForrest_lt500_DSET')
+    # run_gradientboost(X_train,y_train,X_test,y_test,'GradBoost_lt500_DSET')
