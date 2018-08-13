@@ -249,7 +249,7 @@ def del_regr_plot(y_act,y_pred,mdl_data):
     # dfpred.head()
     resids=y_pred-y_test
 
-    fig = plt.figure(figsize=(18,5))
+    fig = plt.figure(figsize=(12,5))
     ax1 = fig.add_subplot(1,3,1)
     ax2 = fig.add_subplot(1,3,2)
     ax3 = fig.add_subplot(1,3,3)
@@ -285,7 +285,7 @@ def regr_plot(y_act,y_pred,mdl_data):
     # dfpred.head()
     resids=y_pred-y_test
 
-    fig = plt.figure(figsize=(18,5))
+    fig = plt.figure(figsize=(12,5))
     ax1 = fig.add_subplot(1,3,1)
     ax2 = fig.add_subplot(1,3,2)
     ax3 = fig.add_subplot(1,3,3)
@@ -316,7 +316,7 @@ def plot_feature_importance(featurelist,featureimp,name):
     tmp_df=tmp_df.rename(columns={0:'feature'})
     tmp_df['prime']=featureimp
     feature_df=tmp_df.sort_values(by=['prime'], ascending=True)
-    fig=plt.figure(figsize=(10,15))
+    fig=plt.figure(figsize=(8,10))
     ax1=fig.add_subplot(111)
     ax1.barh(feature_df['feature'],feature_df['prime'],color='rgbkymc')
     fig.suptitle(name, fontsize=12, y=1.2)
@@ -387,6 +387,11 @@ def estimate_tree(mdl,X_train, y_train,X_test,y_test):
 def run_randforest(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING RANDOM FOREST .................  :',name)
 
+    Z_train=X_train.copy()
+    Z_test=X_test.copy()
+    # X_train.drop('zipcode',axis=1,inplace=True)
+    # X_test.drop('zipcode',axis=1,inplace=True)
+
     regr = RandomForestRegressor(random_state=0)
     regr.fit(X_train, y_train)
     # RandomForestRegressor(bootstrap=True, criterion='mse', max_depth=25,
@@ -447,15 +452,21 @@ def run_randforest(X_train,y_train,X_test,y_test,name):
     my_metrics(y_test,y_pred_BFF,name+'BFF')
     regr_plot(y_test,y_pred_BFF,name+'BFF')
 
-    Z_test=X_test.copy()
-    Z_test['act'+name]=y_test
-    Z_test['pred'+name]=y_pred_BFF
-    Z_test['resid'+name]=Z_test['pred'+name]-Z_test['act'+name]
+    # Z_test=X_test.copy()
+    Z_test['act']=y_test
+    Z_test['pred']=y_pred_BFF
+    Z_test['resid']=Z_test['pred']-Z_test['act']
     # print(Z_test.head().T)
     return(Z_test)
 
 def run_gradientboost(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING GRADIENT BOOST REGRESSION .................  :',name)
+
+    Z_train=X_train.copy()
+    Z_test=X_test.copy()
+    # X_train.drop('zipcode',axis=1,inplace=True)
+    # X_test.drop('zipcode',axis=1,inplace=True)
+
     params = {'n_estimators': 500, 'max_depth': 4, 'min_samples_split': 2,\
           'learning_rate': 0.01, 'loss': 'ls', 'random_state':0}
     params = {'random_state':0}
@@ -521,10 +532,10 @@ def run_gradientboost(X_train,y_train,X_test,y_test,name):
     my_metrics(y_test,y_pred_BFF,name+'BFF')
     regr_plot(y_test,y_pred_BFF,name+'BFF')
 
-    Z_test=X_test.copy()
-    Z_test['act'+name]=y_test
-    Z_test['pred'+name]=y_pred_BFF
-    Z_test['resid'+name]=Z_test['pred'+name]-Z_test['act'+name]
+    # Z_test=X_test.copy()
+    Z_test['act']=y_test
+    Z_test['pred']=y_pred_BFF
+    Z_test['resid']=Z_test['pred']-Z_test['act']
     # print(Z_test.head().T)
     return(Z_test)
 
@@ -532,6 +543,12 @@ def run_linreg(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING LINEAR REGRESSION .................  : ',name)   
     X_train=sm.add_constant(X_train,has_constant='add')
     X_test=sm.add_constant(X_test,has_constant='add')
+
+    Z_train=X_train.copy()
+    Z_test=X_test.copy()
+    # X_train.drop('zipcode',axis=1,inplace=True)
+    # X_test.drop('zipcode',axis=1,inplace=True)
+
     # print(X_train.shape, y_train.shape, X_test.shape, y_test.shape)
     # print(X_train.head().T)
     # print(X_test.head().T)
@@ -544,7 +561,7 @@ def run_linreg(X_train,y_train,X_test,y_test,name):
     my_metrics(y_test,y_predOLS,name)
     regr_plot(y_test,y_predOLS,name)
 
-    Z_test=X_test.copy()
+    # Z_test=X_test.copy()
     Z_test['act']=y_test
     Z_test['pred']=y_predOLS
     Z_test['resid']=Z_test['pred']-Z_test['act']
@@ -602,16 +619,16 @@ def pred_feature(pred_list,fname):
 
     fig2 = plt.figure(figsize=(18,10))
     ax1 = fig2.add_subplot(1,2,1)
-    ax1 = fcntdf[dfhead].plot(kind='bar', title ="COUNT",figsize=(18,5),  legend=True, fontsize=20)
-    ax1.set_xlabel(fname, fontsize=12)
-    ax1.set_ylabel("COUNT", fontsize=12)
+    ax1 = fcntdf[dfhead].plot(kind='barh', title ="COUNT",figsize=(5,10),  legend=True, fontsize=9)
+    ax1.set_xlabel(fname, fontsize=9)
+    ax1.set_ylabel("COUNT", fontsize=9)
     fig2 = plt.gcf()
     fig2.savefig('junk/'+'COUNT_'+fname+'.png', format='png')
 
     ax2 = fig2.add_subplot(1,2,2)
-    ax2 = plotdf[dfhead].plot(kind='bar', title ="PCT-Error", figsize=(18,5),  legend=True, fontsize=20)
-    ax2.set_xlabel(fname, fontsize=12)
-    ax2.set_ylabel("PCTE", fontsize=12)
+    ax2 = plotdf[dfhead].plot(kind='barh', title ="PCT-Error", figsize=(5,10),  legend=True, fontsize=9)
+    ax2.set_xlabel(fname, fontsize=9)
+    ax2.set_ylabel("PCTE", fontsize=9)
     fig2 = plt.gcf()
     fig2.savefig('junk/'+'PRED_'+fname+'.png', format='png')
 
@@ -640,6 +657,8 @@ if __name__ == '__main__':
     X_test= pd.read_pickle('pklz/price_split/X_lt_test.pkl')
     y_test= pd.read_pickle('pklz/price_split/y_lt_test.pkl') 
 
+
+    print('MODELLING PRICE SPLIT DATA !!!!!!!!!!!!!')
     Z_test_LIN_lt5c = run_linreg(X_train,y_train,X_test,y_test,'Lin_lt5C')
     Z_test_RF_lt5c  = run_randforest(X_train,y_train,X_test,y_test,'RF_lt5C')
     Z_test_GB_lt5c  = run_gradientboost(X_train,y_train,X_test,y_test,'GB_lt5C')
@@ -678,7 +697,8 @@ if __name__ == '__main__':
     # y_train= pd.read_pickle('pklz/times_split/y_train.pkl')
     # X_test= pd.read_pickle('pklz/times_split/X_test.pkl')
     # y_test= pd.read_pickle('pklz/times_split/y_test.pkl') 
-
+    
+    print('MODELLING TIME SPLIT DATA !!!!!!!!!!!!!')
     Z_test_LIN_t07 = run_linreg(X_train,y_train,X_test,y_test,'Lin_t07')
     Z_test_RF_t07 = run_randforest(X_train,y_train,X_test,y_test,'RF_t07')
     Z_test_GB_t07 = run_gradientboost(X_train,y_train,X_test,y_test,'GB_t07')
@@ -689,8 +709,9 @@ if __name__ == '__main__':
     # print(Z_test_LIN_lt5c.head().T)
     # pred_analysis([Z_test_LIN_lt5c,Z_test_LIN_t07],'linonly')
 
+    print('ANALYZING PREDICTIONS !!!!!!!!!!!!!')
     pred_analysis([Z_test_LIN_lt5c,Z_test_RF_lt5c,Z_test_GB_lt5c,Z_test_LIN_t07,Z_test_RF_t07,Z_test_GB_t07],'allmdls')
-
+    print('MODELLING PROCESS COMPLETE !!!!!!!!!!!!!!!!!!!!!!! ')
 
 
 # def xtra():
