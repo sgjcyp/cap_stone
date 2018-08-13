@@ -449,7 +449,7 @@ def run_randforest(X_train,y_train,X_test,y_test,name):
 
     Z_test=X_test.copy()
     Z_test['act'+name]=y_test
-    Z_test['pred'+name]=y_predBFF
+    Z_test['pred'+name]=y_pred_BFF
     Z_test['resid'+name]=Z_test['pred'+name]-Z_test['act'+name]
     # print(Z_test.head().T)
     return(Z_test)
@@ -523,7 +523,7 @@ def run_gradientboost(X_train,y_train,X_test,y_test,name):
 
     Z_test=X_test.copy()
     Z_test['act'+name]=y_test
-    Z_test['pred'+name]=y_predBFF
+    Z_test['pred'+name]=y_pred_BFF
     Z_test['resid'+name]=Z_test['pred'+name]-Z_test['act'+name]
     # print(Z_test.head().T)
     return(Z_test)
