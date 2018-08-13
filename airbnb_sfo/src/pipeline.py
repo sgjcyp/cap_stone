@@ -305,7 +305,7 @@ def regr_plot(y_act,y_pred,mdl_data):
     ax3.set_xlabel('PREDICT')
     ax3.set_ylabel('RESIDUAL PCT')
 
-    fig.suptitle('mdl_data', fontsize=12, y=1.2)
+    fig.suptitle('MODEL INFO : '+mdl_data, color='b',fontsize=12, y=1.2)
     fig.tight_layout()
 
     fig1 = plt.gcf()
@@ -569,7 +569,7 @@ def run_linreg(X_train,y_train,X_test,y_test,name):
     return(Z_test)
 
 
-def pred_feature(pred_list,fname):
+def del_pred_feature(pred_list,fname):
     # for df_pred in pred_list:
     #     print('analyzing --->',df_pred.name)
     #     print(df_pred.head().T)
@@ -632,9 +632,79 @@ def pred_feature(pred_list,fname):
     fig2 = plt.gcf()
     fig2.savefig('junk/'+'PRED_'+fname+'.png', format='png')
 
+def pred_feature(pred_list,fname):
+    # for df_pred in pred_list:
+    #     print('analyzing --->',df_pred.name)
+    #     print(df_pred.head().T)
+
+    # fname='bedrooms'
+    funique=[]
+    dfnamelist=[fname]
+    # pred_list=[Z_test,Z_test1]
+    for dfx in pred_list:   #each predicted df
+        dfnamelist.append(dfx.name)
+        fcurrlst=dfx[fname].value_counts().index
+        for fcurr in fcurrlst:   #creating a list of unique indexes
+            if fcurr not in funique:
+                funique.append(fcurr)
+            
+    print(funique)
+    print(sorted(funique))
+    # print(funique)
+
+    # eachrow=[]
+    plotdf=pd.DataFrame(columns=[dfnamelist])
+    fcntdf=pd.DataFrame(columns=[dfnamelist])
+
+
+    for fc in sorted(funique):
+        eachrow=[]
+        fcntrow=[]
+        eachrow.append(fc)
+        fcntrow.append(fc)
+        for dfx in pred_list:
+            filtered=dfx[dfx[fname]==fc]
+            eachrow.append(np.abs(((filtered.act-filtered.pred)/filtered.act)).mean())
+            fcntrow.append((dfx[fname]==fc).sum())
+            
+    # (Z_test.bedrooms==0).sum()        
+    #     print(eachrow)
+    #     print(plotdf.shape())
+    #     plotdf=plotdf.append(pd.Series(eachrow,index=[dfnamelist]),ignore_index=True)
+        plotdf.loc[len(plotdf)] = eachrow
+        fcntdf.loc[len(fcntdf)] = fcntrow
+
+    # plotdf.linreg_times = plotdf.linreg_times*0.9
+    print(plotdf.head())
+    # dfj.append(pd.DataFrame(listj, columns=['col1','col2']),ignore_index=True)
+    dfhead=dfnamelist[1:]
+
+
+    fig2 = plt.figure(figsize=(10,6))
+    ax1 = fig2.add_subplot(1,2,1)
+#     ax1 = 
+    fcntdf[dfhead].plot(kind='barh', title ="COUNT",ax=ax1,  legend=True, fontsize=9)
+    ax1.set_yticklabels(sorted(funique))
+    ax1.set_ylabel(fname.upper(), fontsize=12)
+    ax1.set_xlabel("COUNT", fontsize=12)
+#     fig2 = plt.gcf()
+#     fig2.savefig('junk/'+'COUNT_'+fname+'.png', format='png')
+
+    ax2 = fig2.add_subplot(1,2,2)
+#     ax2 = 
+    plotdf[dfhead].plot(kind='barh', title ="PERCENT-Error",ax=ax2,  legend=True, fontsize=9)
+    ax2.set_yticklabels(sorted(funique))
+    ax2.set_ylabel(fname.upper(), fontsize=12)
+    ax2.set_xlabel("PCTE", fontsize=12)
+    
+    fig2.suptitle('FEATURE : '+fname.upper()+'\n\n', color='r',fontsize=20,y=1)
+    
+    fig3 = plt.gcf()
+    fig3.savefig('junk/'+'PRED_'+fname+'.png')
+
 def pred_analysis(pred_list,mdl_data):
 
-    featurelist=['bedrooms','accommodates','bathrooms','beds','bed_type']
+    featurelist=['bedrooms','accommodates','bathrooms','beds','bed_type','zipcode']
 
     for fname in featurelist:
         pred_feature(pred_list,fname)
