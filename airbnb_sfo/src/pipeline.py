@@ -412,8 +412,8 @@ def run_randforest(X_train,y_train,X_test,y_test,name):
 
     Z_train=X_train.copy()
     Z_test=X_test.copy()
-    # X_train.drop('zipcode',axis=1,inplace=True)
-    # X_test.drop('zipcode',axis=1,inplace=True)
+    X_train.drop('zipcode',axis=1,inplace=True)
+    X_test.drop('zipcode',axis=1,inplace=True)
 
     regr = RandomForestRegressor(random_state=0)
     regr.fit(X_train, y_train)
@@ -487,8 +487,8 @@ def run_gradientboost(X_train,y_train,X_test,y_test,name):
 
     Z_train=X_train.copy()
     Z_test=X_test.copy()
-    # X_train.drop('zipcode',axis=1,inplace=True)
-    # X_test.drop('zipcode',axis=1,inplace=True)
+    X_train.drop('zipcode',axis=1,inplace=True)
+    X_test.drop('zipcode',axis=1,inplace=True)
 
     params = {'n_estimators': 500, 'max_depth': 4, 'min_samples_split': 2,\
           'learning_rate': 0.01, 'loss': 'ls', 'random_state':0}
@@ -569,8 +569,8 @@ def run_linreg(X_train,y_train,X_test,y_test,name):
 
     Z_train=X_train.copy()
     Z_test=X_test.copy()
-    # X_train.drop('zipcode',axis=1,inplace=True)
-    # X_test.drop('zipcode',axis=1,inplace=True)
+    X_train.drop('zipcode',axis=1,inplace=True)
+    X_test.drop('zipcode',axis=1,inplace=True)
 
     # print(X_train.shape, y_train.shape, X_test.shape, y_test.shape)
     # print(X_train.head().T)
@@ -646,14 +646,14 @@ def del_pred_feature(pred_list,fname):
     ax1.set_xlabel(fname, fontsize=9)
     ax1.set_ylabel("COUNT", fontsize=9)
     fig2 = plt.gcf()
-    fig2.savefig('junk/'+'COUNT_'+fname+'.png', format='png')
+    fig2.savefig('plots/'+'COUNT_'+fname+'.png', format='png')
 
     ax2 = fig2.add_subplot(1,2,2)
     ax2 = plotdf[dfhead].plot(kind='barh', title ="PCT-Error", figsize=(5,10),  legend=True, fontsize=9)
     ax2.set_xlabel(fname, fontsize=9)
     ax2.set_ylabel("PCTE", fontsize=9)
     fig2 = plt.gcf()
-    fig2.savefig('junk/'+'PRED_'+fname+'.png', format='png')
+    fig2.savefig('plots/'+'PRED_'+fname+'.png', format='png')
 
 def pred_feature(pred_list,fname):
     # for df_pred in pred_list:
@@ -723,7 +723,7 @@ def pred_feature(pred_list,fname):
     fig2.suptitle('FEATURE : '+fname.upper()+'\n\n', color='r',fontsize=20,y=1)
     
     fig3 = plt.gcf()
-    fig3.savefig('junk/'+'PRED_'+fname+'.png')
+    fig3.savefig('plots/'+'PRED_'+fname+'.png')
 
 def pred_analysis(pred_list,mdl_data):
 
