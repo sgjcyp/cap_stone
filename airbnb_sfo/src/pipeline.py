@@ -376,13 +376,36 @@ def evaluate(model, test_features, test_labels):
     # print('   My R2 Score is : ',my_metric(test_labels,predictions))
     return(accuracy)
 
-def estimate_tree(mdl,X_train, y_train,X_test,y_test):
+def del_estimate_tree(mdl,X_train, y_train,X_test,y_test,name):
     treelist=[1,5,10,15,25,50,100,150,200,250,300,400,500,700,900,1200,1500,1800,2000]
     for trees in treelist:
     # for trees in range(25,300,25):
         mdl.n_estimators = trees
         mdl.fit(X_train, y_train)
         print('         ',trees, mdl.score(X_test,y_test))
+
+def estimate_tree(mdl,X_train, y_train,X_test,y_test,name):
+    treelist=[1,5,10,15,25,50,100,150,200,250,300,400,500,700,900,1200,1500,1800,2000]
+    mdl_score=[]
+    for trees in treelist:
+    # for trees in range(25,300,25):
+        mdl.n_estimators = trees
+        mdl.fit(X_train, y_train)
+        mscore=mdl.score(X_test,y_test)
+        print('         ',trees, mscore)
+        mdl_score.append(mscore)
+        
+    print(treelist,mdl_score)
+#     print(mdl.name)
+    plt.figure(figsize=(12,10))
+    plt.plot(treelist, mdl_score, 'o--')
+    #plt.plot(np.linspace(0,1), np.linspace(0,1), 'k--')
+    plt.ylabel("Score",  fontsize=14)
+    plt.xlabel("Estimators", fontsize=14)
+    
+#     fig_et.tight_layout()
+    fig_et = plt.gcf()
+    fig_et.savefig('plots/'+'nEsti_'+name+'.png', format='png')
 
 def run_randforest(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING RANDOM FOREST .................  :',name)
@@ -410,7 +433,7 @@ def run_randforest(X_train,y_train,X_test,y_test,name):
     plot_feature_importance(featurelist,featureimp,name)
     regr_plot(y_test,y_predRF,name)
 
-    estimate_tree(regr,X_train, y_train,X_test,y_test)
+    estimate_tree(regr,X_train, y_train,X_test,y_test,name)
 
     # Random Hyper Parameter Grid
     
@@ -489,7 +512,7 @@ def run_gradientboost(X_train,y_train,X_test,y_test,name):
     plot_feature_importance(featurelist,featureimp,name)
     regr_plot(y_test,y_pred,name)
 
-    estimate_tree(gbr,X_train, y_train,X_test,y_test)
+    estimate_tree(gbr,X_train, y_train,X_test,y_test,name)
 
     # Gradient Hyper Parameter Grid - Random
 
