@@ -411,6 +411,7 @@ def estimate_tree(mdl,X_train, y_train,X_test,y_test,name):
 
 def run_randforest(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING RANDOM FOREST .................  :',name)
+    print(X_train.head().T)
 
     Z_train=X_train.copy()
     Z_test=X_test.copy()
@@ -486,11 +487,14 @@ def run_randforest(X_train,y_train,X_test,y_test,name):
 
 def run_gradientboost(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING GRADIENT BOOST REGRESSION .................  :',name)
+    print(X_train.head().T)
 
     Z_train=X_train.copy()
     Z_test=X_test.copy()
     X_train.drop('zipcode',axis=1,inplace=True)
     X_test.drop('zipcode',axis=1,inplace=True)
+    #X_train.drop('zipcode',axis=1,inplace=True)
+    #X_test.drop('zipcode',axis=1,inplace=True)
 
     params = {'n_estimators': 500, 'max_depth': 4, 'min_samples_split': 2,\
           'learning_rate': 0.01, 'loss': 'ls', 'random_state':0}
@@ -568,6 +572,7 @@ def run_linreg(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING LINEAR REGRESSION .................  : ',name)   
     X_train=sm.add_constant(X_train,has_constant='add')
     X_test=sm.add_constant(X_test,has_constant='add')
+    print(X_train.head().T)
 
     Z_train=X_train.copy()
     Z_test=X_test.copy()
@@ -750,13 +755,14 @@ if __name__ == '__main__':
     X_train= pd.read_pickle('pklz/price_split/X_lt_train.pkl')
     y_train= pd.read_pickle('pklz/price_split/y_lt_train.pkl')
     X_test= pd.read_pickle('pklz/price_split/X_lt_test.pkl')
-    y_test= pd.read_pickle('pklz/price_split/y_lt_test.pkl') 
+    y_test= pd.read_pickle('pklz/price_split/y_lt_test.pkl')
 
-
+    Xg_train = X_train.copy()
+    Xg_test  = X_test.copy()
     print('MODELLING PRICE SPLIT DATA !!!!!!!!!!!!!')
     Z_test_LIN_lt5c = run_linreg(X_train,y_train,X_test,y_test,'Lin_lt5C')
     Z_test_RF_lt5c  = run_randforest(X_train,y_train,X_test,y_test,'RF_lt5C')
-    Z_test_GB_lt5c  = run_gradientboost(X_train,y_train,X_test,y_test,'GB_lt5C')
+    Z_test_GB_lt5c  = run_gradientboost(Xg_train,y_train,Xg_test,y_test,'GB_lt5C')
 
     Z_test_LIN_lt5c.name = 'Z_test_LIN_lt5c'
     Z_test_RF_lt5c.name = 'Z_test_RF_lt5c'
@@ -786,6 +792,8 @@ if __name__ == '__main__':
     X_test=X_test.drop(['price'],axis=1)
 
 
+    Xg_train = X_train.copy()
+    Xg_test  = X_test.copy()
 
     # create_time_database(df_train,df_test)
     # X_train= pd.read_pickle('pklz/times_split/X_train.pkl')
@@ -796,7 +804,7 @@ if __name__ == '__main__':
     print('MODELLING TIME SPLIT DATA !!!!!!!!!!!!!')
     Z_test_LIN_t07 = run_linreg(X_train,y_train,X_test,y_test,'Lin_t07')
     Z_test_RF_t07 = run_randforest(X_train,y_train,X_test,y_test,'RF_t07')
-    Z_test_GB_t07 = run_gradientboost(X_train,y_train,X_test,y_test,'GB_t07')
+    Z_test_GB_t07 = run_gradientboost(Xg_train,y_train,Xg_test,y_test,'GB_t07')
 
     Z_test_LIN_t07.name='Z_test_LIN_t07'
     Z_test_RF_t07.name='Z_test_RF_t07'
