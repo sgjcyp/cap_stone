@@ -800,54 +800,14 @@ if __name__ == '__main__':
     Z_test_RF_t07.name='Z_test_RF_t07'
     Z_test_GB_t07.name='Z_test_GB_t07'
     # print(Z_test_LIN_lt5c.head().T)
-    # pred_analysis([Z_test_LIN_lt5c,Z_test_LIN_t07],'linonly')
 
     print('ANALYZING PREDICTIONS !!!!!!!!!!!!!')
+    # pred_analysis([Z_test_LIN_lt5c,Z_test_LIN_t07],'linonly')
     pred_analysis([Z_test_LIN_lt5c,Z_test_RF_lt5c,Z_test_GB_lt5c,Z_test_LIN_t07,Z_test_RF_t07,Z_test_GB_t07],'allmdls')
     print('MODELLING PROCESS COMPLETE !!!!!!!!!!!!!!!!!!!!!!! ')
 
 
 # def xtra():
-
-    # X_train= pd.read_pickle('pklz/price_split/X_gt_train.pkl')
-    # y_train= pd.read_pickle('pklz/price_split/y_gt_train.pkl')
-    # X_test= pd.read_pickle('pklz/price_split/X_gt_test.pkl')
-    # y_test= pd.read_pickle('pklz/price_split/y_gt_test.pkl')    
-    # X_train=sm.add_constant(X_train,has_constant='add')
-    # X_test=sm.add_constant(X_test,has_constant='add')
-    # print(X_train.shape, y_train.shape, X_test.shape, y_test.shape)
-    # print(X_train.head().T)
-    # print(X_test.head().T)
-
-    # listd_insig_cols = ['host_is_superhost','host_identity_verified','bed_type','guests_included','room_type_full',\
-    #                 'room_type_pvt','amentcnt','ppt_condensed_apt','ppt_condensed_aptspl','ppt_condensed_auto',\
-    #                 'ppt_condensed_hotel','ppt_condensed_other',\
-                    # 'zipcode_94014.0', 'zipcode_94015.0', 'zipcode_94102.0',\
-                    # 'zipcode_94103.0', 'zipcode_94104.0', 'zipcode_94105.0',\
-                    # 'zipcode_94107.0', 'zipcode_94108.0', 'zipcode_94109.0',\
-                    # 'zipcode_94110.0', 'zipcode_94111.0', 'zipcode_94112.0',\
-                    # 'zipcode_94114.0', 'zipcode_94115.0', 'zipcode_94116.0',\
-                    # 'zipcode_94117.0', 'zipcode_94118.0', 'zipcode_94121.0',\
-                    # 'zipcode_94122.0', 'zipcode_94123.0', 'zipcode_94124.0',\
-                    # 'zipcode_94127.0', 'zipcode_94129.0', 'zipcode_94131.0',\
-                    # 'zipcode_94132.0', 'zipcode_94133.0', 'zipcode_94134.0','zipcode_94158.0']
-    # listd_insig_cols = ['zipcode_94014.0', 'zipcode_94102.0',\
-    #                 'zipcode_94103.0', 'zipcode_94104.0', 'zipcode_94105.0',\
-    #                 'zipcode_94107.0', 'zipcode_94108.0', 'zipcode_94109.0',\
-    #                 'zipcode_94110.0', 'zipcode_94112.0',\
-    #                 'zipcode_94114.0', 'zipcode_94115.0',\
-    #                 'zipcode_94015.0', 'zipcode_94111.0', 'zipcode_94116.0',\
-    #                 'zipcode_94117.0', 'zipcode_94118.0', 'zipcode_94121.0',\
-    #                 'zipcode_94122.0', 'zipcode_94123.0', 'zipcode_94124.0',\
-    #                 'zipcode_94127.0', 'zipcode_94129.0', 'zipcode_94131.0',\
-    #                 'zipcode_94132.0', 'zipcode_94133.0', 'zipcode_94134.0','zipcode_94158.0',\
-    #                 'ppt_condensed_apt','ppt_condensed_aptspl','ppt_condensed_auto',\
-    #                 'ppt_condensed_hotel','ppt_condensed_other','ppt_condensed_hostel','ppt_condensed_house',\
-    #                 'min_night_stay_long','min_night_stay_mid']
-    # X_train.drop(listd_insig_cols,axis=1,inplace=True)
-    # X_test.drop(listd_insig_cols,axis=1,inplace=True)
-    # print(X_train.shape, y_train.shape, X_test.shape, y_test.shape)
-
 
     # modelOLS = sm.OLS(y_train, X_train)
     # resultsOLS = modelOLS.fit()
@@ -855,7 +815,6 @@ if __name__ == '__main__':
     # y_predOLS = resultsOLS.predict(X_test)
     # my_metrics(y_test,y_predOLS,'OLS_LinReg_gt500_Dataset')
     # regr_plot(y_test,y_predOLS,'OLS_LinReg_gt500_Dataset')
-
 
     # #SK Learn Linreg
     # lmodel = linear_model.LinearRegression()
