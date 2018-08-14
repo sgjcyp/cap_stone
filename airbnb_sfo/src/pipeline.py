@@ -151,10 +151,12 @@ def process_data(listd,dropzips):
     listd=create_dummies(listd,'ppt_condensed')
 
     if(dropzips):
-        listd.drop('zipcode',axis=1,inplace=True)
+        print('in dropzips')
+        # listd.drop('zipcode',axis=1,inplace=True)
     else:
-        listd=listd[listd.zipcode!='-- default zip code --']
-        listd=create_dummies(listd,'zipcode')
+        print('in not dropzips')
+        # listd=listd[listd.zipcode!='-- default zip code --']
+        # listd=create_dummies(listd,'zipcode')
 
     #imputing some more missing values
     listd['cleaning_fee'].fillna(0, inplace=True)
@@ -741,9 +743,9 @@ def create_time_database():
 if __name__ == '__main__':
     init()
 
-    # df = read_data()
-    # df = process_data(df,0)
-    # create_database(df)
+    df = read_data()
+    df = process_data(df,1)
+    create_database(df)
 
     X_train= pd.read_pickle('pklz/price_split/X_lt_train.pkl')
     y_train= pd.read_pickle('pklz/price_split/y_lt_train.pkl')
