@@ -47,7 +47,7 @@ def impute_nullrows(dframe,colname):
     return dftmp
 
 def init():
-    # pd.set_option('display.max_columns', 96)
+    pd.set_option('display.max_columns', 96)
     pd.set_option('display.max_rows', 96)
 
 def read_data():
