@@ -705,7 +705,7 @@ def pred_feature(pred_list,fname):
         fcntdf.loc[len(fcntdf)] = fcntrow
 
     # plotdf.linreg_times = plotdf.linreg_times*0.9
-    print(plotdf.head())
+    print(plotdf)
     # dfj.append(pd.DataFrame(listj, columns=['col1','col2']),ignore_index=True)
     dfhead=dfnamelist[1:]
 
