@@ -12,16 +12,16 @@ The data set used in this project consists of 5k-8k listings each day. Each list
 
 The data was obtained from Insideairbnb.com.  After deep evaluation and cycles of learning,  final dataset was created for common listings excluding luxury listings based on time series. This model uses all the features to make the prediction of daily price.
 
-Key Features :
+### Key Features :
   - Data Engineering
   - Regression Modelling
   - Hyperparameter Tuning
   - Prediction and Result Analysis 
 
-Challenges & Limitations :
+### Challenges & Limitations :
   - Rich dataset with several features with multiple options  
   - Some of the sparse outliers were breaking the model performance.   
   - Excluded the luxury listings, Model is limited to common listings
 
-Tech used:
+### Tech used:
 Python, Pandas, Numpy, Matplotlib, statsmodels, Scikit-learn, Feature Engg, Modelling, Regression, gmaps
