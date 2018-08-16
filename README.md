@@ -12,6 +12,11 @@ The data set used in this project consists of 5k-8k listings each day. Each list
 
 The data was obtained from Insideairbnb.com.  After deep evaluation and cycles of learning,  final dataset was created for common listings excluding luxury listings based on time series. This model uses all the features to make the prediction of daily price.
 
+### Machine Learning Techiniques
+  - Lineary Regression
+  - Random Forest
+  - Gradient Boost
+
 ### Key Features :
   - Data Engineering
   - Regression Modelling
