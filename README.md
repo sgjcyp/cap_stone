@@ -1,8 +1,12 @@
-# cap_stone : Price Is Right
+# Price Is Right - Price Predictor for Airbnb
 
-Predict the Price for New Listings and Current Listings
+## Motivation
+Airbnb listings are growing at rapid pace all over the world.  New hosts price their listings approximately based on the listings in the neighbourhood.  Most often than not, it is hard to find the listing with the same features in the same location. This Model helps hosts price their properties @ Right Price based on the primary and latent features
 
-Airbnb listings are growing at rapid pace all over the world.  New hosts price their listings approximately based on the listings in the neighbourhood.  This Model helps hosts price their properties @ Right Price based on the primary and latent features
+##Data
+Data Source: InsideAirbnb.com
+
+The data set used in this project consists of 5k-8k listings each day. Each listing has inforamation about 96 features.   Each feature can have multiple variations causing it to be a OOC multidimentional model.  For example a listing with "1 bedroom + 1 pvt bathroom" will be priced much higher than "1 bedroom + 1 shared bathroom"
 
 Process Flow :  The data was obtained from airbnb.  After deep evaluation and cycles are learning,  this model includes all the features excluding the luxury listings to make the prediction of daily price.
 
