@@ -47,7 +47,7 @@ def impute_nullrows(dframe,colname):
     return dftmp
 
 def init():
-    pd.set_option('display.max_columns', 96)
+    # pd.set_option('display.max_columns', 96)
     pd.set_option('display.max_rows', 96)
 
 def read_data():
@@ -149,14 +149,16 @@ def process_data(listd,dropzips):
     listd.loc[listd['property_type']=='Loft', 'ppt_condensed'] = 'room'
 
     listd=create_dummies(listd,'ppt_condensed')
+        
+    #listd=listd[listd.zipcode!='-- default zip code --']
 
     if(dropzips):
-        print('in dropzips')
-        # listd.drop('zipcode',axis=1,inplace=True)
+        #listd.drop('zipcode',axis=1,inplace=True)
+        print('dropping none of zipcodes')
     else:
-        print('in not dropzips')
-        # listd=listd[listd.zipcode!='-- default zip code --']
-        # listd=create_dummies(listd,'zipcode')
+        print('dropping default zipcodes')
+        #listd=listd[listd.zipcode!='-- default zip code --']
+        #listd=create_dummies(listd,'zipcode')
 
     #imputing some more missing values
     listd['cleaning_fee'].fillna(0, inplace=True)
@@ -307,7 +309,7 @@ def regr_plot(y_act,y_pred,mdl_data):
     ax3.set_xlabel('PREDICT')
     ax3.set_ylabel('RESIDUAL PCT')
 
-    fig.suptitle('MODEL INFO : '+mdl_data, color='b',fontsize=12, y=1.2)
+    fig.suptitle('mdl_data', fontsize=12, y=1.2)
     fig.tight_layout()
 
     fig1 = plt.gcf()
@@ -378,7 +380,7 @@ def evaluate(model, test_features, test_labels):
     # print('   My R2 Score is : ',my_metric(test_labels,predictions))
     return(accuracy)
 
-def del_estimate_tree(mdl,X_train, y_train,X_test,y_test,name):
+def estimate_tree(mdl,X_train, y_train,X_test,y_test):
     treelist=[1,5,10,15,25,50,100,150,200,250,300,400,500,700,900,1200,1500,1800,2000]
     for trees in treelist:
     # for trees in range(25,300,25):
@@ -386,32 +388,8 @@ def del_estimate_tree(mdl,X_train, y_train,X_test,y_test,name):
         mdl.fit(X_train, y_train)
         print('         ',trees, mdl.score(X_test,y_test))
 
-def estimate_tree(mdl,X_train, y_train,X_test,y_test,name):
-    treelist=[1,5,10,15,25,50,100,150,200,250,300,400,500,700,900,1200,1500,1800,2000]
-    mdl_score=[]
-    for trees in treelist:
-    # for trees in range(25,300,25):
-        mdl.n_estimators = trees
-        mdl.fit(X_train, y_train)
-        mscore=mdl.score(X_test,y_test)
-        print('         ',trees, mscore)
-        mdl_score.append(mscore)
-        
-    print(treelist,mdl_score)
-#     print(mdl.name)
-    plt.figure(figsize=(12,10))
-    plt.plot(treelist, mdl_score, 'o--')
-    #plt.plot(np.linspace(0,1), np.linspace(0,1), 'k--')
-    plt.ylabel("Score",  fontsize=14)
-    plt.xlabel("Estimators", fontsize=14)
-    
-#     fig_et.tight_layout()
-    fig_et = plt.gcf()
-    fig_et.savefig('plots/'+'nEsti_'+name+'.png', format='png')
-
 def run_randforest(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING RANDOM FOREST .................  :',name)
-    print(X_train.head().T)
 
     Z_train=X_train.copy()
     Z_test=X_test.copy()
@@ -436,7 +414,7 @@ def run_randforest(X_train,y_train,X_test,y_test,name):
     plot_feature_importance(featurelist,featureimp,name)
     regr_plot(y_test,y_predRF,name)
 
-    estimate_tree(regr,X_train, y_train,X_test,y_test,name)
+    estimate_tree(regr,X_train, y_train,X_test,y_test)
 
     # Random Hyper Parameter Grid
     
@@ -478,24 +456,21 @@ def run_randforest(X_train,y_train,X_test,y_test,name):
     my_metrics(y_test,y_pred_BFF,name+'BFF')
     regr_plot(y_test,y_pred_BFF,name+'BFF')
 
-    # Z_test=X_test.copy()
-    Z_test['act']=y_test
-    Z_test['pred']=y_pred_BFF
-    Z_test['resid']=Z_test['pred']-Z_test['act']
+    #Z_test=X_test.copy()
+    Z_test['act'+name]=y_test
+    Z_test['pred'+name]=y_pred_BFF
+    Z_test['resid'+name]=Z_test['pred'+name]-Z_test['act'+name]
     # print(Z_test.head().T)
     return(Z_test)
 
 def run_gradientboost(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING GRADIENT BOOST REGRESSION .................  :',name)
-    print(X_train.head().T)
 
     Z_train=X_train.copy()
     Z_test=X_test.copy()
     X_train.drop('zipcode',axis=1,inplace=True)
     X_test.drop('zipcode',axis=1,inplace=True)
-    #X_train.drop('zipcode',axis=1,inplace=True)
-    #X_test.drop('zipcode',axis=1,inplace=True)
-
+    
     params = {'n_estimators': 500, 'max_depth': 4, 'min_samples_split': 2,\
           'learning_rate': 0.01, 'loss': 'ls', 'random_state':0}
     params = {'random_state':0}
@@ -518,7 +493,7 @@ def run_gradientboost(X_train,y_train,X_test,y_test,name):
     plot_feature_importance(featurelist,featureimp,name)
     regr_plot(y_test,y_pred,name)
 
-    estimate_tree(gbr,X_train, y_train,X_test,y_test,name)
+    estimate_tree(gbr,X_train, y_train,X_test,y_test)
 
     # Gradient Hyper Parameter Grid - Random
 
@@ -561,10 +536,10 @@ def run_gradientboost(X_train,y_train,X_test,y_test,name):
     my_metrics(y_test,y_pred_BFF,name+'BFF')
     regr_plot(y_test,y_pred_BFF,name+'BFF')
 
-    # Z_test=X_test.copy()
-    Z_test['act']=y_test
-    Z_test['pred']=y_pred_BFF
-    Z_test['resid']=Z_test['pred']-Z_test['act']
+    #Z_test=X_test.copy()
+    Z_test['act'+name]=y_test
+    Z_test['pred'+name]=y_pred_BFF
+    Z_test['resid'+name]=Z_test['pred'+name]-Z_test['act'+name]
     # print(Z_test.head().T)
     return(Z_test)
 
@@ -572,8 +547,7 @@ def run_linreg(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING LINEAR REGRESSION .................  : ',name)   
     X_train=sm.add_constant(X_train,has_constant='add')
     X_test=sm.add_constant(X_test,has_constant='add')
-    print(X_train.head().T)
-
+    
     Z_train=X_train.copy()
     Z_test=X_test.copy()
     X_train.drop('zipcode',axis=1,inplace=True)
@@ -591,7 +565,7 @@ def run_linreg(X_train,y_train,X_test,y_test,name):
     my_metrics(y_test,y_predOLS,name)
     regr_plot(y_test,y_predOLS,name)
 
-    # Z_test=X_test.copy()
+    #Z_test=X_test.copy()
     Z_test['act']=y_test
     Z_test['pred']=y_predOLS
     Z_test['resid']=Z_test['pred']-Z_test['act']
@@ -599,7 +573,7 @@ def run_linreg(X_train,y_train,X_test,y_test,name):
     return(Z_test)
 
 
-def del_pred_feature(pred_list,fname):
+def pred_feature(pred_list,fname):
     # for df_pred in pred_list:
     #     print('analyzing --->',df_pred.name)
     #     print(df_pred.head().T)
@@ -653,84 +627,14 @@ def del_pred_feature(pred_list,fname):
     ax1.set_xlabel(fname, fontsize=9)
     ax1.set_ylabel("COUNT", fontsize=9)
     fig2 = plt.gcf()
-    fig2.savefig('plots/'+'COUNT_'+fname+'.png', format='png')
+    fig2.savefig('junk/'+'COUNT_'+fname+'.png', format='png')
 
     ax2 = fig2.add_subplot(1,2,2)
     ax2 = plotdf[dfhead].plot(kind='barh', title ="PCT-Error", figsize=(5,10),  legend=True, fontsize=9)
     ax2.set_xlabel(fname, fontsize=9)
     ax2.set_ylabel("PCTE", fontsize=9)
     fig2 = plt.gcf()
-    fig2.savefig('plots/'+'PRED_'+fname+'.png', format='png')
-
-def pred_feature(pred_list,fname):
-    # for df_pred in pred_list:
-    #     print('analyzing --->',df_pred.name)
-    #     print(df_pred.head().T)
-
-    # fname='bedrooms'
-    funique=[]
-    dfnamelist=[fname]
-    # pred_list=[Z_test,Z_test1]
-    for dfx in pred_list:   #each predicted df
-        dfnamelist.append(dfx.name)
-        fcurrlst=dfx[fname].value_counts().index
-        for fcurr in fcurrlst:   #creating a list of unique indexes
-            if fcurr not in funique:
-                funique.append(fcurr)
-            
-    print(funique)
-    print(sorted(funique))
-    # print(funique)
-
-    # eachrow=[]
-    plotdf=pd.DataFrame(columns=[dfnamelist])
-    fcntdf=pd.DataFrame(columns=[dfnamelist])
-
-
-    for fc in sorted(funique):
-        eachrow=[]
-        fcntrow=[]
-        eachrow.append(fc)
-        fcntrow.append(fc)
-        for dfx in pred_list:
-            filtered=dfx[dfx[fname]==fc]
-            eachrow.append(np.abs(((filtered.act-filtered.pred)/filtered.act)).mean())
-            fcntrow.append((dfx[fname]==fc).sum())
-            
-    # (Z_test.bedrooms==0).sum()        
-    #     print(eachrow)
-    #     print(plotdf.shape())
-    #     plotdf=plotdf.append(pd.Series(eachrow,index=[dfnamelist]),ignore_index=True)
-        plotdf.loc[len(plotdf)] = eachrow
-        fcntdf.loc[len(fcntdf)] = fcntrow
-
-    # plotdf.linreg_times = plotdf.linreg_times*0.9
-    print(plotdf)
-    # dfj.append(pd.DataFrame(listj, columns=['col1','col2']),ignore_index=True)
-    dfhead=dfnamelist[1:]
-
-
-    fig2 = plt.figure(figsize=(10,6))
-    ax1 = fig2.add_subplot(1,2,1)
-#     ax1 = 
-    fcntdf[dfhead].plot(kind='barh', title ="COUNT",ax=ax1,  legend=True, fontsize=9)
-    ax1.set_yticklabels(sorted(funique))
-    ax1.set_ylabel(fname.upper(), fontsize=12)
-    ax1.set_xlabel("COUNT", fontsize=12)
-#     fig2 = plt.gcf()
-#     fig2.savefig('junk/'+'COUNT_'+fname+'.png', format='png')
-
-    ax2 = fig2.add_subplot(1,2,2)
-#     ax2 = 
-    plotdf[dfhead].plot(kind='barh', title ="PERCENT-Error",ax=ax2,  legend=True, fontsize=9)
-    ax2.set_yticklabels(sorted(funique))
-    ax2.set_ylabel(fname.upper(), fontsize=12)
-    ax2.set_xlabel("PCTE", fontsize=12)
-    
-    fig2.suptitle('FEATURE : '+fname.upper()+'\n\n', color='r',fontsize=20,y=1)
-    
-    fig3 = plt.gcf()
-    fig3.savefig('plots/'+'PRED_'+fname+'.png')
+    fig2.savefig('junk/'+'PRED_'+fname+'.png', format='png')
 
 def pred_analysis(pred_list,mdl_data):
 
@@ -748,21 +652,18 @@ def create_time_database():
 if __name__ == '__main__':
     init()
 
-    df = read_data()
-    df = process_data(df,1)
-    create_database(df)
+    #df = read_data()
+    #df = process_data(df,0)
+    #create_database(df)
 
     X_train= pd.read_pickle('pklz/price_split/X_lt_train.pkl')
     y_train= pd.read_pickle('pklz/price_split/y_lt_train.pkl')
     X_test= pd.read_pickle('pklz/price_split/X_lt_test.pkl')
-    y_test= pd.read_pickle('pklz/price_split/y_lt_test.pkl')
+    y_test= pd.read_pickle('pklz/price_split/y_lt_test.pkl') 
 
-    Xg_train = X_train.copy()
-    Xg_test  = X_test.copy()
-    print('MODELLING PRICE SPLIT DATA !!!!!!!!!!!!!')
     Z_test_LIN_lt5c = run_linreg(X_train,y_train,X_test,y_test,'Lin_lt5C')
     Z_test_RF_lt5c  = run_randforest(X_train,y_train,X_test,y_test,'RF_lt5C')
-    Z_test_GB_lt5c  = run_gradientboost(Xg_train,y_train,Xg_test,y_test,'GB_lt5C')
+    Z_test_GB_lt5c  = run_gradientboost(X_train,y_train,X_test,y_test,'GB_lt5C')
 
     Z_test_LIN_lt5c.name = 'Z_test_LIN_lt5c'
     Z_test_RF_lt5c.name = 'Z_test_RF_lt5c'
@@ -792,32 +693,71 @@ if __name__ == '__main__':
     X_test=X_test.drop(['price'],axis=1)
 
 
-    Xg_train = X_train.copy()
-    Xg_test  = X_test.copy()
 
     # create_time_database(df_train,df_test)
     # X_train= pd.read_pickle('pklz/times_split/X_train.pkl')
     # y_train= pd.read_pickle('pklz/times_split/y_train.pkl')
     # X_test= pd.read_pickle('pklz/times_split/X_test.pkl')
     # y_test= pd.read_pickle('pklz/times_split/y_test.pkl') 
-    
-    print('MODELLING TIME SPLIT DATA !!!!!!!!!!!!!')
+
     Z_test_LIN_t07 = run_linreg(X_train,y_train,X_test,y_test,'Lin_t07')
     Z_test_RF_t07 = run_randforest(X_train,y_train,X_test,y_test,'RF_t07')
-    Z_test_GB_t07 = run_gradientboost(Xg_train,y_train,Xg_test,y_test,'GB_t07')
+    Z_test_GB_t07 = run_gradientboost(X_train,y_train,X_test,y_test,'GB_t07')
 
     Z_test_LIN_t07.name='Z_test_LIN_t07'
     Z_test_RF_t07.name='Z_test_RF_t07'
     Z_test_GB_t07.name='Z_test_GB_t07'
+   
     # print(Z_test_LIN_lt5c.head().T)
+    #pred_analysis([Z_test_LIN_lt5c,Z_test_LIN_t07],'linonly')
 
-    print('ANALYZING PREDICTIONS !!!!!!!!!!!!!')
-    # pred_analysis([Z_test_LIN_lt5c,Z_test_LIN_t07],'linonly')
     pred_analysis([Z_test_LIN_lt5c,Z_test_RF_lt5c,Z_test_GB_lt5c,Z_test_LIN_t07,Z_test_RF_t07,Z_test_GB_t07],'allmdls')
+
     print('MODELLING PROCESS COMPLETE !!!!!!!!!!!!!!!!!!!!!!! ')
 
 
+
 # def xtra():
+
+    # X_train= pd.read_pickle('pklz/price_split/X_gt_train.pkl')
+    # y_train= pd.read_pickle('pklz/price_split/y_gt_train.pkl')
+    # X_test= pd.read_pickle('pklz/price_split/X_gt_test.pkl')
+    # y_test= pd.read_pickle('pklz/price_split/y_gt_test.pkl')    
+    # X_train=sm.add_constant(X_train,has_constant='add')
+    # X_test=sm.add_constant(X_test,has_constant='add')
+    # print(X_train.shape, y_train.shape, X_test.shape, y_test.shape)
+    # print(X_train.head().T)
+    # print(X_test.head().T)
+
+    # listd_insig_cols = ['host_is_superhost','host_identity_verified','bed_type','guests_included','room_type_full',\
+    #                 'room_type_pvt','amentcnt','ppt_condensed_apt','ppt_condensed_aptspl','ppt_condensed_auto',\
+    #                 'ppt_condensed_hotel','ppt_condensed_other',\
+                    # 'zipcode_94014.0', 'zipcode_94015.0', 'zipcode_94102.0',\
+                    # 'zipcode_94103.0', 'zipcode_94104.0', 'zipcode_94105.0',\
+                    # 'zipcode_94107.0', 'zipcode_94108.0', 'zipcode_94109.0',\
+                    # 'zipcode_94110.0', 'zipcode_94111.0', 'zipcode_94112.0',\
+                    # 'zipcode_94114.0', 'zipcode_94115.0', 'zipcode_94116.0',\
+                    # 'zipcode_94117.0', 'zipcode_94118.0', 'zipcode_94121.0',\
+                    # 'zipcode_94122.0', 'zipcode_94123.0', 'zipcode_94124.0',\
+                    # 'zipcode_94127.0', 'zipcode_94129.0', 'zipcode_94131.0',\
+                    # 'zipcode_94132.0', 'zipcode_94133.0', 'zipcode_94134.0','zipcode_94158.0']
+    # listd_insig_cols = ['zipcode_94014.0', 'zipcode_94102.0',\
+    #                 'zipcode_94103.0', 'zipcode_94104.0', 'zipcode_94105.0',\
+    #                 'zipcode_94107.0', 'zipcode_94108.0', 'zipcode_94109.0',\
+    #                 'zipcode_94110.0', 'zipcode_94112.0',\
+    #                 'zipcode_94114.0', 'zipcode_94115.0',\
+    #                 'zipcode_94015.0', 'zipcode_94111.0', 'zipcode_94116.0',\
+    #                 'zipcode_94117.0', 'zipcode_94118.0', 'zipcode_94121.0',\
+    #                 'zipcode_94122.0', 'zipcode_94123.0', 'zipcode_94124.0',\
+    #                 'zipcode_94127.0', 'zipcode_94129.0', 'zipcode_94131.0',\
+    #                 'zipcode_94132.0', 'zipcode_94133.0', 'zipcode_94134.0','zipcode_94158.0',\
+    #                 'ppt_condensed_apt','ppt_condensed_aptspl','ppt_condensed_auto',\
+    #                 'ppt_condensed_hotel','ppt_condensed_other','ppt_condensed_hostel','ppt_condensed_house',\
+    #                 'min_night_stay_long','min_night_stay_mid']
+    # X_train.drop(listd_insig_cols,axis=1,inplace=True)
+    # X_test.drop(listd_insig_cols,axis=1,inplace=True)
+    # print(X_train.shape, y_train.shape, X_test.shape, y_test.shape)
+
 
     # modelOLS = sm.OLS(y_train, X_train)
     # resultsOLS = modelOLS.fit()
@@ -825,6 +765,7 @@ if __name__ == '__main__':
     # y_predOLS = resultsOLS.predict(X_test)
     # my_metrics(y_test,y_predOLS,'OLS_LinReg_gt500_Dataset')
     # regr_plot(y_test,y_predOLS,'OLS_LinReg_gt500_Dataset')
+
 
     # #SK Learn Linreg
     # lmodel = linear_model.LinearRegression()
