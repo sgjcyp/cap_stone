@@ -12,6 +12,9 @@ The data set used in this project consists of 5k-8k listings each day. Each list
 
 The data was obtained from Insideairbnb.com.  After deep evaluation and cycles of learning,  final dataset was created for common listings excluding luxury listings based on time series. This model uses all the features to make the prediction of daily price.
 
+![ProcessFlow](airbnb_sfo/images/process_flow.png)
+#####  Fig1 : Process Flow
+
 ### Machine Learning Techiniques
   - Lineary Regression
   - Random Forest
@@ -31,6 +34,13 @@ The data was obtained from Insideairbnb.com.  After deep evaluation and cycles o
 ### Results :
 
 The primary dataset was little complicated to analyze since the latent features are plenty based on the 96 primary features.  The initial models did not perform well but gave an inherent signature to help identify the outliers that could be imputed with no signal loss.  The resulting models with some tuning performed impressively resulting in an average prediction error of 10% or $15. 
+
+![ResultTable](airbnb_sfo/images/capstone_result_table.png)
+#####  Fig2 : Table of Results
+
+![Predicted Error](airbnb_sfo/images/capstone_result_chart.png)
+#####  Fig3 : Predicted Error
+
 
 
 ### Tech used:
