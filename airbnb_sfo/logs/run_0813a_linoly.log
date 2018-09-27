@@ -1,0 +1,202 @@
+
+READING INPUT DATASET .................
+2018-07-05 2019-07-04
+2009-05-03 2018-07-05
+
+PROCESSING INPUT DATASET .................
+in dropzips
+(4662, 23)
+
+CREATING A CLEAN TRAIN TEST DATASET .................
+(4662, 23)
+   host_is_superhost         ...           ppt_condensed_other
+0                  1         ...                             0
+1                  0         ...                             0
+2                  0         ...                             0
+3                  1         ...                             0
+4                  0         ...                             0
+
+[5 rows x 23 columns]
+(3729, 22) (933, 22)
+(3729,) (933,)
+MODELLING PRICE SPLIT DATA !!!!!!!!!!!!!
+
+RUNNING LINEAR REGRESSION .................  :  Lin_lt5C
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  price   R-squared:                       0.560
+Model:                            OLS   Adj. R-squared:                  0.558
+Method:                 Least Squares   F-statistic:                     211.4
+Date:                Tue, 14 Aug 2018   Prob (F-statistic):               0.00
+Time:                        02:32:36   Log-Likelihood:                -19704.
+No. Observations:                3505   AIC:                         3.945e+04
+Df Residuals:                    3483   BIC:                         3.959e+04
+Df Model:                          21                                         
+Covariance Type:            nonrobust                                         
+==========================================================================================
+                             coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------------------
+const                     24.1818     17.520      1.380      0.168     -10.169      58.533
+host_is_superhost          4.5237      2.481      1.823      0.068      -0.341       9.389
+host_identity_verified    10.2350      2.476      4.134      0.000       5.381      15.090
+accommodates              14.7559      1.332     11.079      0.000      12.145      17.367
+bathrooms                 15.8919      2.418      6.573      0.000      11.152      20.632
+bedrooms                  36.0318      2.331     15.459      0.000      31.462      40.602
+beds                     -10.2783      1.955     -5.259      0.000     -14.110      -6.446
+bed_type                   1.1294      9.806      0.115      0.908     -18.096      20.355
+cleaning_fee               0.3014      0.026     11.799      0.000       0.251       0.352
+guests_included            1.1554      1.108      1.043      0.297      -1.017       3.327
+room_type_full            92.7709     10.874      8.531      0.000      71.450     114.092
+room_type_pvt             41.8636     10.673      3.922      0.000      20.937      62.790
+amentcnt                   0.3017      0.115      2.629      0.009       0.077       0.527
+min_night_stay_long      -30.2203     18.082     -1.671      0.095     -65.673       5.233
+min_night_stay_mid       -34.2040      3.170    -10.790      0.000     -40.419     -27.989
+ppt_condensed_apt        -44.6693     10.510     -4.250      0.000     -65.275     -24.063
+ppt_condensed_aptspl     -22.7201     14.393     -1.579      0.115     -50.940       5.500
+ppt_condensed_auto       -62.1236     48.683     -1.276      0.202    -157.574      33.327
+ppt_condensed_hostel     -57.5671     15.597     -3.691      0.000     -88.147     -26.988
+ppt_condensed_hotel       28.3908     11.647      2.438      0.015       5.554      51.227
+ppt_condensed_house      -58.6435     10.650     -5.506      0.000     -79.524     -37.763
+ppt_condensed_other      -17.7132     19.405     -0.913      0.361     -55.760      20.333
+==============================================================================
+Omnibus:                      543.915   Durbin-Watson:                   1.991
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1514.159
+Skew:                           0.829   Prob(JB):                         0.00
+Kurtosis:                       5.760   Cond. No.                     4.19e+03
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 4.19e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.
+
+   **************** Metrics for :  Lin_lt5C  *******************
+   R2 (Variance Squared ERROR)                   = 0.5630
+   MSE (Mean Squared ERROR)                      = 4155.3912
+   RMSE (ROOT Mean Squared ERROR)                = 64.4623
+   RMSLE (ROOT Mean Squared Logrithmic ERROR)    = 0.3848
+   PCTE  (Percent Absolute Error)                = 0.3486
+
+   Baseline Mean Absolute Error                  = 77.42548779203487
+   Predicted Mean Absolute Error                 = 49.562200402974916
+   Accuracy  (100-MAPE mean absolute PCT ERR)    = 65.14 %
+
+   **************** -------------------------- ******************* 877 4.849129093161211
+
+PROCESSING INPUT DATASET .................
+in dropzips
+(14312, 23)
+
+PROCESSING INPUT DATASET .................
+in dropzips
+(4662, 23)
+MODELLING TIME SPLIT DATA !!!!!!!!!!!!!
+
+RUNNING LINEAR REGRESSION .................  :  Lin_t07
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  price   R-squared:                       0.547
+Model:                            OLS   Adj. R-squared:                  0.546
+Method:                 Least Squares   F-statistic:                     772.4
+Date:                Tue, 14 Aug 2018   Prob (F-statistic):               0.00
+Time:                        02:32:42   Log-Likelihood:                -75926.
+No. Observations:               13482   AIC:                         1.519e+05
+Df Residuals:                   13460   BIC:                         1.521e+05
+Df Model:                          21                                         
+Covariance Type:            nonrobust                                         
+==========================================================================================
+                             coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------------------
+const                      3.7343      6.972      0.536      0.592      -9.931      17.400
+host_is_superhost          3.5934      1.252      2.870      0.004       1.139       6.048
+host_identity_verified    12.1283      1.296      9.359      0.000       9.588      14.668
+accommodates              16.9463      0.663     25.558      0.000      15.647      18.246
+bathrooms                 -0.5666      0.947     -0.598      0.550      -2.423       1.290
+bedrooms                  25.5763      1.095     23.354      0.000      23.430      27.723
+beds                     -11.2283      0.979    -11.472      0.000     -13.147      -9.310
+bed_type                   4.0863      4.667      0.876      0.381      -5.062      13.235
+cleaning_fee               0.3071      0.014     22.724      0.000       0.281       0.334
+guests_included            3.7023      0.565      6.552      0.000       2.595       4.810
+room_type_full            93.4035      4.743     19.693      0.000      84.107     102.700
+room_type_pvt             41.3221      4.640      8.906      0.000      32.228      50.417
+amentcnt                   0.2817      0.060      4.671      0.000       0.164       0.400
+min_night_stay_long      -31.5283      8.643     -3.648      0.000     -48.471     -14.586
+min_night_stay_mid       -30.7722      1.670    -18.425      0.000     -34.046     -27.498
+ppt_condensed_apt         -6.8474      3.547     -1.931      0.054     -13.799       0.105
+ppt_condensed_aptspl      -4.2070      5.565     -0.756      0.450     -15.115       6.701
+ppt_condensed_auto        -9.2814     21.700     -0.428      0.669     -51.817      33.255
+ppt_condensed_hostel     -16.3763      7.053     -2.322      0.020     -30.201      -2.552
+ppt_condensed_hotel       39.6131      4.615      8.583      0.000      30.567      48.660
+ppt_condensed_house      -17.5403      3.639     -4.820      0.000     -24.674     -10.407
+ppt_condensed_other       13.1141      8.047      1.630      0.103      -2.659      28.887
+==============================================================================
+Omnibus:                     2223.111   Durbin-Watson:                   1.808
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             5540.921
+Skew:                           0.923   Prob(JB):                         0.00
+Kurtosis:                       5.541   Cond. No.                     3.51e+03
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 3.51e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.
+
+   **************** Metrics for :  Lin_t07  *******************
+   R2 (Variance Squared ERROR)                   = 0.5402
+   MSE (Mean Squared ERROR)                      = 4618.9389
+   RMSE (ROOT Mean Squared ERROR)                = 67.9628
+   RMSLE (ROOT Mean Squared Logrithmic ERROR)    = 0.3771
+   PCTE  (Percent Absolute Error)                = 0.3327
+
+   Baseline Mean Absolute Error                  = 79.72063570296392
+   Predicted Mean Absolute Error                 = 50.37931521964294
+   Accuracy  (100-MAPE mean absolute PCT ERR)    = 66.73 %
+
+   **************** -------------------------- ******************* 4382 4.901069196186545
+ANALYZING PREDICTIONS !!!!!!!!!!!!!
+[1, 2, 0, 3, 4, 5, 7, 6]
+[0, 1, 2, 3, 4, 5, 6, 7]
+  bedrooms Z_test_LIN_lt5c Z_test_LIN_t07
+0      0.0        0.372687       0.366801
+1      1.0        0.371482       0.340881
+2      2.0        0.298430       0.308929
+3      3.0        0.282022       0.284707
+4      4.0        0.197514       0.256646
+[2, 4, 1, 3, 6, 5, 8, 7, 10, 12, 9, 14, 11, 13]
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+  accommodates Z_test_LIN_lt5c Z_test_LIN_t07
+0          1.0        0.439130       0.333081
+1          2.0        0.358508       0.339791
+2          3.0        0.291149       0.347157
+3          4.0        0.328994       0.331956
+4          5.0        0.380919       0.338326
+[1.0, 2.0, 1.5, 0.0, 2.5, 3.0, 4.0, 0.5, 5.0, 3.5, 7.0, 4.5, 6.5]
+[0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.5, 7.0]
+  bathrooms Z_test_LIN_lt5c Z_test_LIN_t07
+0       0.0        0.617503       0.482832
+1       0.5        0.471357       0.494831
+2       1.0        0.338173       0.331432
+3       1.5        0.382319       0.298112
+4       2.0        0.288836       0.329764
+[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 0.0, 7.0, 14.0, 8.0, 10.0]
+[0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 10.0, 14.0]
+  beds Z_test_LIN_lt5c Z_test_LIN_t07
+0  0.0        0.559657       0.292727
+1  1.0        0.369537       0.341998
+2  2.0        0.302985       0.327248
+3  3.0        0.347596       0.321813
+4  4.0        0.323741       0.301571
+[1, 0]
+[0, 1]
+  bed_type Z_test_LIN_lt5c Z_test_LIN_t07
+0      0.0        0.361682       0.337148
+1      1.0        0.348349       0.332643
+[94110.0, 94114.0, 94117.0, 94122.0, 94107.0, 94112.0, 94102.0, 94131.0, 94103.0, 94118.0, 94116.0, 94133.0, 94109.0, 94115.0, 94108.0, 94121.0, 94134.0, 94124.0, 94127.0, 94123.0, 94132.0, 94014.0, 94105.0, 94111.0, 94158.0, 94104.0, 94129.0, 94015.0, 94965.0]
+[94014.0, 94015.0, 94102.0, 94103.0, 94104.0, 94105.0, 94107.0, 94108.0, 94109.0, 94110.0, 94111.0, 94112.0, 94114.0, 94115.0, 94116.0, 94117.0, 94118.0, 94121.0, 94122.0, 94123.0, 94124.0, 94127.0, 94129.0, 94131.0, 94132.0, 94133.0, 94134.0, 94158.0, 94965.0]
+   zipcode Z_test_LIN_lt5c Z_test_LIN_t07
+0  94014.0        0.524340       0.656092
+1  94015.0             NaN       0.157235
+2  94102.0        0.471016       0.373348
+3  94103.0        0.228332       0.253849
+4  94104.0        0.200636       0.239702
+MODELLING PROCESS COMPLETE !!!!!!!!!!!!!!!!!!!!!!! 
