@@ -1,0 +1,756 @@
+
+READING INPUT DATASET .................
+2018-07-05 2019-07-04
+2009-05-03 2018-07-05
+
+PROCESSING INPUT DATASET .................
+in dropzips
+(4662, 23)
+
+CREATING A CLEAN TRAIN TEST DATASET .................
+(4662, 23)
+   host_is_superhost  host_identity_verified  zipcode  accommodates  \
+0                  1                       1  94117.0             3   
+1                  0                       1  94110.0             5   
+2                  0                       1  94117.0             2   
+3                  1                       1  94127.0             1   
+4                  0                       1  94117.0             2   
+
+   bathrooms  bedrooms  beds  bed_type  price  cleaning_fee  guests_included  \
+0        1.0         1   2.0         1  170.0         100.0                2   
+1        1.0         2   3.0         1  235.0         100.0                2   
+2        4.0         1   1.0         1   65.0          50.0                1   
+3        2.0         1   1.0         1   63.0          30.0                1   
+4        4.0         1   1.0         1   65.0          50.0                1   
+
+   room_type_full  room_type_pvt  amentcnt  min_night_stay_long  \
+0               1              0        26                    0   
+1               1              0        17                    0   
+2               0              1        18                    0   
+3               0              1        30                    0   
+4               0              1        16                    0   
+
+   min_night_stay_mid  ppt_condensed_apt  ppt_condensed_aptspl  \
+0                   0                  1                     0   
+1                   1                  1                     0   
+2                   1                  1                     0   
+3                   1                  0                     0   
+4                   1                  1                     0   
+
+   ppt_condensed_auto  ppt_condensed_hostel  ppt_condensed_hotel  \
+0                   0                     0                    0   
+1                   0                     0                    0   
+2                   0                     0                    0   
+3                   0                     0                    0   
+4                   0                     0                    0   
+
+   ppt_condensed_house  ppt_condensed_other  
+0                    0                    0  
+1                    0                    0  
+2                    0                    0  
+3                    1                    0  
+4                    0                    0  
+(3729, 22) (933, 22)
+(3729,) (933,)
+MODELLING PRICE SPLIT DATA !!!!!!!!!!!!!
+
+RUNNING LINEAR REGRESSION .................  :  Lin_lt5C
+                           1486     745      1714     359      1826
+const                       1.0      1.0      1.0      1.0      1.0
+host_is_superhost           0.0      1.0      1.0      1.0      1.0
+host_identity_verified      1.0      1.0      0.0      1.0      1.0
+zipcode                 94110.0  94110.0  94110.0  94110.0  94117.0
+accommodates                5.0      3.0      5.0      4.0      2.0
+bathrooms                   2.0      1.0      1.0      2.0      1.5
+bedrooms                    2.0      1.0      3.0      2.0      1.0
+beds                        3.0      2.0      3.0      2.0      1.0
+bed_type                    1.0      1.0      1.0      1.0      1.0
+cleaning_fee              175.0     70.0    250.0    110.0      0.0
+guests_included             1.0      2.0      4.0      4.0      1.0
+room_type_full              1.0      0.0      1.0      1.0      0.0
+room_type_pvt               0.0      1.0      0.0      0.0      1.0
+amentcnt                   22.0     21.0     20.0     27.0     27.0
+min_night_stay_long         0.0      0.0      0.0      0.0      0.0
+min_night_stay_mid          0.0      0.0      0.0      0.0      0.0
+ppt_condensed_apt           0.0      1.0      0.0      1.0      1.0
+ppt_condensed_aptspl        0.0      0.0      0.0      0.0      0.0
+ppt_condensed_auto          0.0      0.0      0.0      0.0      0.0
+ppt_condensed_hostel        0.0      0.0      0.0      0.0      0.0
+ppt_condensed_hotel         0.0      0.0      0.0      0.0      0.0
+ppt_condensed_house         1.0      0.0      1.0      0.0      0.0
+ppt_condensed_other         0.0      0.0      0.0      0.0      0.0
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  price   R-squared:                       0.560
+Model:                            OLS   Adj. R-squared:                  0.558
+Method:                 Least Squares   F-statistic:                     211.4
+Date:                Wed, 15 Aug 2018   Prob (F-statistic):               0.00
+Time:                        00:31:18   Log-Likelihood:                -19704.
+No. Observations:                3505   AIC:                         3.945e+04
+Df Residuals:                    3483   BIC:                         3.959e+04
+Df Model:                          21                                         
+Covariance Type:            nonrobust                                         
+==========================================================================================
+                             coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------------------
+const                     24.1818     17.520      1.380      0.168     -10.169      58.533
+host_is_superhost          4.5237      2.481      1.823      0.068      -0.341       9.389
+host_identity_verified    10.2350      2.476      4.134      0.000       5.381      15.090
+accommodates              14.7559      1.332     11.079      0.000      12.145      17.367
+bathrooms                 15.8919      2.418      6.573      0.000      11.152      20.632
+bedrooms                  36.0318      2.331     15.459      0.000      31.462      40.602
+beds                     -10.2783      1.955     -5.259      0.000     -14.110      -6.446
+bed_type                   1.1294      9.806      0.115      0.908     -18.096      20.355
+cleaning_fee               0.3014      0.026     11.799      0.000       0.251       0.352
+guests_included            1.1554      1.108      1.043      0.297      -1.017       3.327
+room_type_full            92.7709     10.874      8.531      0.000      71.450     114.092
+room_type_pvt             41.8636     10.673      3.922      0.000      20.937      62.790
+amentcnt                   0.3017      0.115      2.629      0.009       0.077       0.527
+min_night_stay_long      -30.2203     18.082     -1.671      0.095     -65.673       5.233
+min_night_stay_mid       -34.2040      3.170    -10.790      0.000     -40.419     -27.989
+ppt_condensed_apt        -44.6693     10.510     -4.250      0.000     -65.275     -24.063
+ppt_condensed_aptspl     -22.7201     14.393     -1.579      0.115     -50.940       5.500
+ppt_condensed_auto       -62.1236     48.683     -1.276      0.202    -157.574      33.327
+ppt_condensed_hostel     -57.5671     15.597     -3.691      0.000     -88.147     -26.988
+ppt_condensed_hotel       28.3908     11.647      2.438      0.015       5.554      51.227
+ppt_condensed_house      -58.6435     10.650     -5.506      0.000     -79.524     -37.763
+ppt_condensed_other      -17.7132     19.405     -0.913      0.361     -55.760      20.333
+==============================================================================
+Omnibus:                      543.915   Durbin-Watson:                   1.991
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1514.159
+Skew:                           0.829   Prob(JB):                         0.00
+Kurtosis:                       5.760   Cond. No.                     4.19e+03
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 4.19e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.
+
+   **************** Metrics for :  Lin_lt5C  *******************
+   R2 (Variance Squared ERROR)                   = 0.5630
+   MSE (Mean Squared ERROR)                      = 4155.3912
+   RMSE (ROOT Mean Squared ERROR)                = 64.4623
+   RMSLE (ROOT Mean Squared Logrithmic ERROR)    = 0.3848
+   PCTE  (Percent Absolute Error)                = 0.3486
+
+   Baseline Mean Absolute Error                  = 77.42548779203487
+   Predicted Mean Absolute Error                 = 49.562200402974916
+   Accuracy  (100-MAPE mean absolute PCT ERR)    = 65.14 %
+
+   **************** -------------------------- ******************* 877 4.849129093161211
+
+RUNNING RANDOM FOREST .................  : RF_lt5C
+                           1486     745      1714     359      1826
+host_is_superhost           0.0      1.0      1.0      1.0      1.0
+host_identity_verified      1.0      1.0      0.0      1.0      1.0
+zipcode                 94110.0  94110.0  94110.0  94110.0  94117.0
+accommodates                5.0      3.0      5.0      4.0      2.0
+bathrooms                   2.0      1.0      1.0      2.0      1.5
+bedrooms                    2.0      1.0      3.0      2.0      1.0
+beds                        3.0      2.0      3.0      2.0      1.0
+bed_type                    1.0      1.0      1.0      1.0      1.0
+cleaning_fee              175.0     70.0    250.0    110.0      0.0
+guests_included             1.0      2.0      4.0      4.0      1.0
+room_type_full              1.0      0.0      1.0      1.0      0.0
+room_type_pvt               0.0      1.0      0.0      0.0      1.0
+amentcnt                   22.0     21.0     20.0     27.0     27.0
+min_night_stay_long         0.0      0.0      0.0      0.0      0.0
+min_night_stay_mid          0.0      0.0      0.0      0.0      0.0
+ppt_condensed_apt           0.0      1.0      0.0      1.0      1.0
+ppt_condensed_aptspl        0.0      0.0      0.0      0.0      0.0
+ppt_condensed_auto          0.0      0.0      0.0      0.0      0.0
+ppt_condensed_hostel        0.0      0.0      0.0      0.0      0.0
+ppt_condensed_hotel         0.0      0.0      0.0      0.0      0.0
+ppt_condensed_house         1.0      0.0      1.0      0.0      0.0
+ppt_condensed_other         0.0      0.0      0.0      0.0      0.0
+
+   **************** Metrics for :  RF_lt5C  *******************
+   R2 (Variance Squared ERROR)                   = 0.6035
+   MSE (Mean Squared ERROR)                      = 3771.0860
+   RMSE (ROOT Mean Squared ERROR)                = 61.4092
+   RMSLE (ROOT Mean Squared Logrithmic ERROR)    = 0.3510
+   PCTE  (Percent Absolute Error)                = 0.3058
+
+   Baseline Mean Absolute Error                  = 77.42548779203487
+   Predicted Mean Absolute Error                 = 44.75984634657567
+   Accuracy  (100-MAPE mean absolute PCT ERR)    = 69.42 %
+
+   **************** -------------------------- ******************* 877 4.791046122367235
+          1 0.3613363630308515
+          5 0.5803902253784491
+          10 0.6034574852494206
+          15 0.6092656330881016
+          25 0.6275987325663113
+          50 0.6326974473477271
+          100 0.6342085597370956
+          150 0.632416522058659
+          200 0.634679863195903
+          250 0.6373515184476073
+          300 0.6370765154032141
+          400 0.6359011062886915
+          500 0.6361040276604142
+          700 0.6351398872275846
+          900 0.6349069995117185
+          1200 0.635113004652797
+          1500 0.6351180282011322
+          1800 0.634568986251907
+          2000 0.6346750849427354
+[1, 5, 10, 15, 25, 50, 100, 150, 200, 250, 300, 400, 500, 700, 900, 1200, 1500, 1800, 2000] [0.3613363630308515, 0.5803902253784491, 0.6034574852494206, 0.6092656330881016, 0.6275987325663113, 0.6326974473477271, 0.6342085597370956, 0.632416522058659, 0.634679863195903, 0.6373515184476073, 0.6370765154032141, 0.6359011062886915, 0.6361040276604142, 0.6351398872275846, 0.6349069995117185, 0.635113004652797, 0.6351180282011322, 0.634568986251907, 0.6346750849427354]
+Fitting 3 folds for each of 100 candidates, totalling 300 fits
+{'n_estimators': 200, 'min_samples_split': 2, 'min_samples_leaf': 1, 'max_features': 'sqrt', 'max_depth': 10, 'bootstrap': False}
+0.6100585401903129
+   ********************* BASE MODEL Performance *********************
+   R2 Score = 0.60.
+   Average Error: 44.7475
+   Accuracy = 69.81%.
+   ********************* RANDOM MODEL Performance *********************
+   R2 Score = 0.65.
+   Average Error: 44.0224
+   Accuracy = 69.42%.
+Improvement of -0.57%.
+
+   **************** Metrics for :  RF_lt5CBFF  *******************
+   R2 (Variance Squared ERROR)                   = 0.6463
+   MSE (Mean Squared ERROR)                      = 3363.6078
+   RMSE (ROOT Mean Squared ERROR)                = 57.9966
+   RMSLE (ROOT Mean Squared Logrithmic ERROR)    = 0.3377
+   PCTE  (Percent Absolute Error)                = 0.3058
+
+   Baseline Mean Absolute Error                  = 77.42548779203487
+   Predicted Mean Absolute Error                 = 44.0223856303668
+   Accuracy  (100-MAPE mean absolute PCT ERR)    = 69.42 %
+
+   **************** -------------------------- ******************* 877 4.362236798222884
+
+RUNNING GRADIENT BOOST REGRESSION .................  : GB_lt5C
+                           1486     745      1714     359      1826
+host_is_superhost           0.0      1.0      1.0      1.0      1.0
+host_identity_verified      1.0      1.0      0.0      1.0      1.0
+zipcode                 94110.0  94110.0  94110.0  94110.0  94117.0
+accommodates                5.0      3.0      5.0      4.0      2.0
+bathrooms                   2.0      1.0      1.0      2.0      1.5
+bedrooms                    2.0      1.0      3.0      2.0      1.0
+beds                        3.0      2.0      3.0      2.0      1.0
+bed_type                    1.0      1.0      1.0      1.0      1.0
+cleaning_fee              175.0     70.0    250.0    110.0      0.0
+guests_included             1.0      2.0      4.0      4.0      1.0
+room_type_full              1.0      0.0      1.0      1.0      0.0
+room_type_pvt               0.0      1.0      0.0      0.0      1.0
+amentcnt                   22.0     21.0     20.0     27.0     27.0
+min_night_stay_long         0.0      0.0      0.0      0.0      0.0
+min_night_stay_mid          0.0      0.0      0.0      0.0      0.0
+ppt_condensed_apt           0.0      1.0      0.0      1.0      1.0
+ppt_condensed_aptspl        0.0      0.0      0.0      0.0      0.0
+ppt_condensed_auto          0.0      0.0      0.0      0.0      0.0
+ppt_condensed_hostel        0.0      0.0      0.0      0.0      0.0
+ppt_condensed_hotel         0.0      0.0      0.0      0.0      0.0
+ppt_condensed_house         1.0      0.0      1.0      0.0      0.0
+ppt_condensed_other         0.0      0.0      0.0      0.0      0.0
+MSE: 3534.2311
+
+   **************** Metrics for :  GB_lt5C  *******************
+   R2 (Variance Squared ERROR)                   = 0.6284
+   MSE (Mean Squared ERROR)                      = 3534.2311
+   RMSE (ROOT Mean Squared ERROR)                = 59.4494
+   RMSLE (ROOT Mean Squared Logrithmic ERROR)    = 0.3442
+   PCTE  (Percent Absolute Error)                = 0.3083
+
+   Baseline Mean Absolute Error                  = 77.42548779203487
+   Predicted Mean Absolute Error                 = 44.65293258031233
+   Accuracy  (100-MAPE mean absolute PCT ERR)    = 69.17 %
+
+   **************** -------------------------- ******************* 877 4.4694218808524555
+          1 0.09213376670931395
+          5 0.3389276146268323
+          10 0.47673011366226725
+          15 0.5378438432023087
+          25 0.5885033754307416
+          50 0.6180290149712959
+          100 0.6283635860277611
+          150 0.6307198179734823
+          200 0.6312020485855839
+          250 0.6295183472907573
+          300 0.6324171145351982
+          400 0.6294023356708848
+          500 0.6290935739680082
+          700 0.6253306574534261
+          900 0.6226676677161502
+          1200 0.6186772483547361
+          1500 0.6162963827122564
+          1800 0.6121166720635952
+          2000 0.6090204272596267
+[1, 5, 10, 15, 25, 50, 100, 150, 200, 250, 300, 400, 500, 700, 900, 1200, 1500, 1800, 2000] [0.09213376670931395, 0.3389276146268323, 0.47673011366226725, 0.5378438432023087, 0.5885033754307416, 0.6180290149712959, 0.6283635860277611, 0.6307198179734823, 0.6312020485855839, 0.6295183472907573, 0.6324171145351982, 0.6294023356708848, 0.6290935739680082, 0.6253306574534261, 0.6226676677161502, 0.6186772483547361, 0.6162963827122564, 0.6121166720635952, 0.6090204272596267]
+Fitting 3 folds for each of 100 candidates, totalling 300 fits
+{'n_estimators': 1000, 'min_samples_split': 2, 'min_samples_leaf': 1, 'max_features': 'sqrt', 'max_depth': None, 'learning_rate': 0.0325}
+0.5788090100328782
+   ********************* BASE MODEL Performance *********************
+   R2 Score = 0.63.
+   Average Error: 44.6529
+   Accuracy = 69.17%.
+   ********************* RANDOM MODEL Performance *********************
+   R2 Score = 0.63.
+   Average Error: 43.1884
+   Accuracy = 71.01%.
+   Improvement of 2.67%.
+
+   **************** Metrics for :  GB_lt5CBFF  *******************
+   R2 (Variance Squared ERROR)                   = 0.6269
+   MSE (Mean Squared ERROR)                      = 3547.8658
+   RMSE (ROOT Mean Squared ERROR)                = 59.5640
+   RMSLE (ROOT Mean Squared Logrithmic ERROR)    = 0.3387
+   PCTE  (Percent Absolute Error)                = 0.2899
+
+   Baseline Mean Absolute Error                  = 77.42548779203487
+   Predicted Mean Absolute Error                 = 43.1884329781751
+   Accuracy  (100-MAPE mean absolute PCT ERR)    = 71.01 %
+
+   **************** -------------------------- ******************* 877 4.274674210251243
+
+PROCESSING INPUT DATASET .................
+in dropzips
+(14312, 23)
+
+PROCESSING INPUT DATASET .................
+in dropzips
+(4662, 23)
+MODELLING TIME SPLIT DATA !!!!!!!!!!!!!
+
+RUNNING LINEAR REGRESSION .................  :  Lin_t07
+                            0      1      2      3      4
+const                       1      1      1      1      1
+host_is_superhost           1      0      0      1      0
+host_identity_verified      1      1      1      1      1
+zipcode                 94117  94110  94117  94127  94117
+accommodates                3      5      2      1      2
+bathrooms                   1      1      4      2      4
+bedrooms                    1      2      1      1      1
+beds                        2      3      1      1      1
+bed_type                    1      1      1      1      1
+cleaning_fee              100    100     50     30     50
+guests_included             2      2      1      1      1
+room_type_full              1      1      0      0      0
+room_type_pvt               0      0      1      1      1
+amentcnt                   26     17     14     30      8
+min_night_stay_long         0      0      0      0      0
+min_night_stay_mid          0      1      1      0      1
+ppt_condensed_apt           1      1      1      0      0
+ppt_condensed_aptspl        0      0      0      0      0
+ppt_condensed_auto          0      0      0      0      0
+ppt_condensed_hostel        0      0      0      0      0
+ppt_condensed_hotel         0      0      0      0      0
+ppt_condensed_house         0      0      0      1      1
+ppt_condensed_other         0      0      0      0      0
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  price   R-squared:                       0.547
+Model:                            OLS   Adj. R-squared:                  0.546
+Method:                 Least Squares   F-statistic:                     772.4
+Date:                Wed, 15 Aug 2018   Prob (F-statistic):               0.00
+Time:                        00:41:58   Log-Likelihood:                -75926.
+No. Observations:               13482   AIC:                         1.519e+05
+Df Residuals:                   13460   BIC:                         1.521e+05
+Df Model:                          21                                         
+Covariance Type:            nonrobust                                         
+==========================================================================================
+                             coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------------------
+const                      3.7343      6.972      0.536      0.592      -9.931      17.400
+host_is_superhost          3.5934      1.252      2.870      0.004       1.139       6.048
+host_identity_verified    12.1283      1.296      9.359      0.000       9.588      14.668
+accommodates              16.9463      0.663     25.558      0.000      15.647      18.246
+bathrooms                 -0.5666      0.947     -0.598      0.550      -2.423       1.290
+bedrooms                  25.5763      1.095     23.354      0.000      23.430      27.723
+beds                     -11.2283      0.979    -11.472      0.000     -13.147      -9.310
+bed_type                   4.0863      4.667      0.876      0.381      -5.062      13.235
+cleaning_fee               0.3071      0.014     22.724      0.000       0.281       0.334
+guests_included            3.7023      0.565      6.552      0.000       2.595       4.810
+room_type_full            93.4035      4.743     19.693      0.000      84.107     102.700
+room_type_pvt             41.3221      4.640      8.906      0.000      32.228      50.417
+amentcnt                   0.2817      0.060      4.671      0.000       0.164       0.400
+min_night_stay_long      -31.5283      8.643     -3.648      0.000     -48.471     -14.586
+min_night_stay_mid       -30.7722      1.670    -18.425      0.000     -34.046     -27.498
+ppt_condensed_apt         -6.8474      3.547     -1.931      0.054     -13.799       0.105
+ppt_condensed_aptspl      -4.2070      5.565     -0.756      0.450     -15.115       6.701
+ppt_condensed_auto        -9.2814     21.700     -0.428      0.669     -51.817      33.255
+ppt_condensed_hostel     -16.3763      7.053     -2.322      0.020     -30.201      -2.552
+ppt_condensed_hotel       39.6131      4.615      8.583      0.000      30.567      48.660
+ppt_condensed_house      -17.5403      3.639     -4.820      0.000     -24.674     -10.407
+ppt_condensed_other       13.1141      8.047      1.630      0.103      -2.659      28.887
+==============================================================================
+Omnibus:                     2223.111   Durbin-Watson:                   1.808
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             5540.921
+Skew:                           0.923   Prob(JB):                         0.00
+Kurtosis:                       5.541   Cond. No.                     3.51e+03
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 3.51e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.
+
+   **************** Metrics for :  Lin_t07  *******************
+   R2 (Variance Squared ERROR)                   = 0.5402
+   MSE (Mean Squared ERROR)                      = 4618.9389
+   RMSE (ROOT Mean Squared ERROR)                = 67.9628
+   RMSLE (ROOT Mean Squared Logrithmic ERROR)    = 0.3771
+   PCTE  (Percent Absolute Error)                = 0.3327
+
+   Baseline Mean Absolute Error                  = 79.72063570296392
+   Predicted Mean Absolute Error                 = 50.37931521964294
+   Accuracy  (100-MAPE mean absolute PCT ERR)    = 66.73 %
+
+   **************** -------------------------- ******************* 4382 4.901069196186545
+
+RUNNING RANDOM FOREST .................  : RF_t07
+                            0      1      2      3      4
+host_is_superhost           1      0      0      1      0
+host_identity_verified      1      1      1      1      1
+zipcode                 94117  94110  94117  94127  94117
+accommodates                3      5      2      1      2
+bathrooms                   1      1      4      2      4
+bedrooms                    1      2      1      1      1
+beds                        2      3      1      1      1
+bed_type                    1      1      1      1      1
+cleaning_fee              100    100     50     30     50
+guests_included             2      2      1      1      1
+room_type_full              1      1      0      0      0
+room_type_pvt               0      0      1      1      1
+amentcnt                   26     17     14     30      8
+min_night_stay_long         0      0      0      0      0
+min_night_stay_mid          0      1      1      0      1
+ppt_condensed_apt           1      1      1      0      0
+ppt_condensed_aptspl        0      0      0      0      0
+ppt_condensed_auto          0      0      0      0      0
+ppt_condensed_hostel        0      0      0      0      0
+ppt_condensed_hotel         0      0      0      0      0
+ppt_condensed_house         0      0      0      1      1
+ppt_condensed_other         0      0      0      0      0
+
+   **************** Metrics for :  RF_t07  *******************
+   R2 (Variance Squared ERROR)                   = 0.8508
+   MSE (Mean Squared ERROR)                      = 1498.5267
+   RMSE (ROOT Mean Squared ERROR)                = 38.7108
+   RMSLE (ROOT Mean Squared Logrithmic ERROR)    = 0.2229
+   PCTE  (Percent Absolute Error)                = 0.1387
+
+   Baseline Mean Absolute Error                  = 79.72063570296392
+   Predicted Mean Absolute Error                 = 20.845523906120416
+   Accuracy  (100-MAPE mean absolute PCT ERR)    = 86.13 %
+
+   **************** -------------------------- ******************* 4382 3.17249903287761
+          1 0.7092062980546894
+          5 0.8348107831726959
+          10 0.850828447348345
+          15 0.8524870521871633
+          25 0.857987040460279
+          50 0.8612911251074915
+          100 0.8643358358413538
+          150 0.8654498475127815
+          200 0.8656329447912604
+          250 0.8662225600045866
+          300 0.8663851957470585
+          400 0.8670212154423133
+          500 0.8670105013819642
+          700 0.8668477589664683
+          900 0.8667993247256756
+          1200 0.8667971712837054
+          1500 0.8667795101682334
+          1800 0.8667373708946982
+          2000 0.8667217462763447
+[1, 5, 10, 15, 25, 50, 100, 150, 200, 250, 300, 400, 500, 700, 900, 1200, 1500, 1800, 2000] [0.7092062980546894, 0.8348107831726959, 0.850828447348345, 0.8524870521871633, 0.857987040460279, 0.8612911251074915, 0.8643358358413538, 0.8654498475127815, 0.8656329447912604, 0.8662225600045866, 0.8663851957470585, 0.8670212154423133, 0.8670105013819642, 0.8668477589664683, 0.8667993247256756, 0.8667971712837054, 0.8667795101682334, 0.8667373708946982, 0.8667217462763447]
+Fitting 3 folds for each of 100 candidates, totalling 300 fits
+{'n_estimators': 200, 'min_samples_split': 2, 'min_samples_leaf': 1, 'max_features': 'sqrt', 'max_depth': 30, 'bootstrap': False}
+0.9024038244842736
+   ********************* BASE MODEL Performance *********************
+   R2 Score = 0.85.
+   Average Error: 20.8716
+   Accuracy = 86.09%.
+   ********************* RANDOM MODEL Performance *********************
+   R2 Score = 0.88.
+   Average Error: 15.3848
+   Accuracy = 89.67%.
+Improvement of 4.16%.
+
+   **************** Metrics for :  RF_t07BFF  *******************
+   R2 (Variance Squared ERROR)                   = 0.8822
+   MSE (Mean Squared ERROR)                      = 1183.2521
+   RMSE (ROOT Mean Squared ERROR)                = 34.3984
+   RMSLE (ROOT Mean Squared Logrithmic ERROR)    = 0.1981
+   PCTE  (Percent Absolute Error)                = 0.1033
+
+   Baseline Mean Absolute Error                  = 79.72063570296392
+   Predicted Mean Absolute Error                 = 15.384822922914246
+   Accuracy  (100-MAPE mean absolute PCT ERR)    = 89.67 %
+
+   **************** -------------------------- ******************* 4382 2.893456908210817
+
+RUNNING GRADIENT BOOST REGRESSION .................  : GB_t07
+                            0      1      2      3      4
+host_is_superhost           1      0      0      1      0
+host_identity_verified      1      1      1      1      1
+zipcode                 94117  94110  94117  94127  94117
+accommodates                3      5      2      1      2
+bathrooms                   1      1      4      2      4
+bedrooms                    1      2      1      1      1
+beds                        2      3      1      1      1
+bed_type                    1      1      1      1      1
+cleaning_fee              100    100     50     30     50
+guests_included             2      2      1      1      1
+room_type_full              1      1      0      0      0
+room_type_pvt               0      0      1      1      1
+amentcnt                   26     17     14     30      8
+min_night_stay_long         0      0      0      0      0
+min_night_stay_mid          0      1      1      0      1
+ppt_condensed_apt           1      1      1      0      0
+ppt_condensed_aptspl        0      0      0      0      0
+ppt_condensed_auto          0      0      0      0      0
+ppt_condensed_hostel        0      0      0      0      0
+ppt_condensed_hotel         0      0      0      0      0
+ppt_condensed_house         0      0      0      1      1
+ppt_condensed_other         0      0      0      0      0
+MSE: 3530.7247
+
+   **************** Metrics for :  GB_t07  *******************
+   R2 (Variance Squared ERROR)                   = 0.6485
+   MSE (Mean Squared ERROR)                      = 3530.7247
+   RMSE (ROOT Mean Squared ERROR)                = 59.4199
+   RMSLE (ROOT Mean Squared Logrithmic ERROR)    = 0.3321
+   PCTE  (Percent Absolute Error)                = 0.2866
+
+   Baseline Mean Absolute Error                  = 79.72063570296392
+   Predicted Mean Absolute Error                 = 43.22666274123279
+   Accuracy  (100-MAPE mean absolute PCT ERR)    = 71.34 %
+
+   **************** -------------------------- ******************* 4382 4.62343024284627
+          1 0.09777322047145655
+          5 0.3410807157911606
+          10 0.47197986896945565
+          15 0.5355614588985638
+          25 0.5917079592534047
+          50 0.6263004103163644
+          100 0.6485323326079184
+          150 0.6608198378414026
+          200 0.6680562640604413
+          250 0.6736418832407212
+          300 0.6785056946442607
+          400 0.686988436452378
+          500 0.6953702428547057
+          700 0.7066135938141538
+          900 0.716443508227536
+          1200 0.7240881074990094
+          1500 0.7302692623884706
+          1800 0.7354813198507856
+          2000 0.7388213694865746
+[1, 5, 10, 15, 25, 50, 100, 150, 200, 250, 300, 400, 500, 700, 900, 1200, 1500, 1800, 2000] [0.09777322047145655, 0.3410807157911606, 0.47197986896945565, 0.5355614588985638, 0.5917079592534047, 0.6263004103163644, 0.6485323326079184, 0.6608198378414026, 0.6680562640604413, 0.6736418832407212, 0.6785056946442607, 0.686988436452378, 0.6953702428547057, 0.7066135938141538, 0.716443508227536, 0.7240881074990094, 0.7302692623884706, 0.7354813198507856, 0.7388213694865746]
+Fitting 3 folds for each of 100 candidates, totalling 300 fits
+{'n_estimators': 1000, 'min_samples_split': 2, 'min_samples_leaf': 2, 'max_features': 'sqrt', 'max_depth': 100, 'learning_rate': 0.01}
+0.904609292509096
+   ********************* BASE MODEL Performance *********************
+   R2 Score = 0.65.
+   Average Error: 43.2267
+   Accuracy = 71.34%.
+   ********************* RANDOM MODEL Performance *********************
+   R2 Score = 0.88.
+   Average Error: 15.8932
+   Accuracy = 89.35%.
+   Improvement of 25.25%.
+
+   **************** Metrics for :  GB_t07BFF  *******************
+   R2 (Variance Squared ERROR)                   = 0.8819
+   MSE (Mean Squared ERROR)                      = 1186.4398
+   RMSE (ROOT Mean Squared ERROR)                = 34.4447
+   RMSLE (ROOT Mean Squared Logrithmic ERROR)    = 0.1992
+   PCTE  (Percent Absolute Error)                = 0.1065
+
+   Baseline Mean Absolute Error                  = 79.72063570296392
+   Predicted Mean Absolute Error                 = 15.893242020778779
+   Accuracy  (100-MAPE mean absolute PCT ERR)    = 89.35 %
+
+   **************** -------------------------- ******************* 4382 2.872608508366308
+ANALYZING PREDICTIONS !!!!!!!!!!!!!
+[1, 2, 0, 3, 4, 5, 7, 6]
+[0, 1, 2, 3, 4, 5, 6, 7]
+  bedrooms Z_test_LIN_lt5c Z_test_RF_lt5c Z_test_GB_lt5c Z_test_LIN_t07  \
+0      0.0        0.372687       0.315512       0.275533       0.366801   
+1      1.0        0.371482       0.320126       0.303607       0.340881   
+2      2.0        0.298430       0.275316       0.270306       0.308929   
+3      3.0        0.282022       0.269486       0.258030       0.284707   
+4      4.0        0.197514       0.222426       0.232130       0.256646   
+5      5.0        0.210116       0.190839       0.202943       0.125795   
+6      6.0             NaN            NaN            NaN       0.072658   
+7      7.0             NaN            NaN            NaN       4.467106   
+
+  Z_test_RF_t07 Z_test_GB_t07  
+0      0.092053      0.095979  
+1      0.113612      0.117945  
+2      0.090081      0.090558  
+3      0.075160      0.074959  
+4      0.070442      0.071212  
+5      0.072477      0.072681  
+6      0.066856      0.073452  
+7      0.000000      0.134509  
+[2, 4, 1, 3, 6, 5, 8, 7, 10, 12, 9, 14, 11, 13]
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+   accommodates Z_test_LIN_lt5c Z_test_RF_lt5c Z_test_GB_lt5c Z_test_LIN_t07  \
+0           1.0        0.439130       0.395621       0.350038       0.333081   
+1           2.0        0.358508       0.301932       0.284777       0.339791   
+2           3.0        0.291149       0.273627       0.280286       0.347157   
+3           4.0        0.328994       0.307316       0.293102       0.331956   
+4           5.0        0.380919       0.337375       0.313758       0.338326   
+5           6.0        0.273744       0.251834       0.249493       0.296401   
+6           7.0        0.374726       0.331877       0.315039       0.224758   
+7           8.0        0.238413       0.212502       0.227976       0.309083   
+8           9.0        0.280901       0.220071       0.180511       0.242578   
+9          10.0        0.099317       0.129801       0.088743       0.203126   
+10         11.0             NaN            NaN            NaN       0.145943   
+11         12.0        0.202166       0.215822       0.224127       0.142874   
+12         13.0             NaN            NaN            NaN       0.416950   
+13         14.0        3.182937       1.324094       1.251838       2.119317   
+
+   Z_test_RF_t07 Z_test_GB_t07  
+0       0.094039      0.096824  
+1       0.119775      0.124914  
+2       0.087987      0.089078  
+3       0.104836      0.106108  
+4       0.073570      0.074976  
+5       0.073125      0.074485  
+6       0.050644      0.054155  
+7       0.050818      0.050201  
+8       0.069942      0.070928  
+9       0.021443      0.027527  
+10      0.032529      0.028146  
+11      0.059946      0.057182  
+12      0.057704      0.029125  
+13      0.000000      0.054110  
+[1.0, 2.0, 1.5, 0.0, 2.5, 3.0, 4.0, 0.5, 5.0, 3.5, 7.0, 4.5, 6.5]
+[0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.5, 7.0]
+   bathrooms Z_test_LIN_lt5c Z_test_RF_lt5c Z_test_GB_lt5c Z_test_LIN_t07  \
+0        0.0        0.617503       0.546644       0.371072       0.482832   
+1        0.5        0.471357       0.191089       0.064113       0.494831   
+2        1.0        0.338173       0.307504       0.296821       0.331432   
+3        1.5        0.382319       0.354725       0.355042       0.298112   
+4        2.0        0.288836       0.250125       0.235259       0.329764   
+5        2.5        0.365738       0.289238       0.264465       0.310847   
+6        3.0        0.182676       0.151148       0.129575       0.278750   
+7        3.5        0.350385       0.147306       0.091957       0.221066   
+8        4.0        0.993269       0.297944       0.072962       0.783741   
+9        4.5        0.093790       0.155408       0.118780       0.199954   
+10       5.0        0.917639       0.105892       0.041967       0.284083   
+11       6.5             NaN            NaN            NaN       0.594098   
+12       7.0        3.182937       1.324094       1.251838       3.025132   
+
+   Z_test_RF_t07 Z_test_GB_t07  
+0       0.101383      0.102927  
+1       0.150626      0.131925  
+2       0.107926      0.111737  
+3       0.089890      0.093149  
+4       0.092797      0.094276  
+5       0.059149      0.060153  
+6       0.075696      0.074861  
+7       0.039721      0.037363  
+8       0.064837      0.056340  
+9       0.134465      0.141067  
+10      0.217380      0.205765  
+11      0.000000      0.000246  
+12      0.000000      0.080094  
+[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 0.0, 7.0, 14.0, 8.0, 10.0]
+[0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 10.0, 14.0]
+    beds Z_test_LIN_lt5c Z_test_RF_lt5c Z_test_GB_lt5c Z_test_LIN_t07  \
+0    0.0        0.559657       0.237071       0.226224       0.292727   
+1    1.0        0.369537       0.316145       0.299866       0.341998   
+2    2.0        0.302985       0.291709       0.277197       0.327248   
+3    3.0        0.347596       0.332406       0.309073       0.321813   
+4    4.0        0.323741       0.248716       0.232630       0.301571   
+5    5.0        0.331531       0.227419       0.242397       0.307730   
+6    6.0        0.154656       0.152887       0.134416       0.206691   
+7    7.0        0.157629       0.100663       0.102407       0.168220   
+8    8.0        0.013705       0.268523       0.250900       0.070321   
+9   10.0             NaN            NaN            NaN       0.035125   
+10  14.0        3.182937       1.324094       1.251838       3.025132   
+
+   Z_test_RF_t07 Z_test_GB_t07  
+0       0.105092      0.108840  
+1       0.108685      0.113708  
+2       0.108292      0.109820  
+3       0.081036      0.082005  
+4       0.086068      0.083231  
+5       0.071793      0.072451  
+6       0.021748      0.023534  
+7       0.016348      0.006519  
+8       0.024719      0.025737  
+9       0.000000      0.000013  
+10      0.000000      0.080094  
+[1, 0]
+[0, 1]
+  bed_type Z_test_LIN_lt5c Z_test_RF_lt5c Z_test_GB_lt5c Z_test_LIN_t07  \
+0      0.0        0.361682       0.418592       0.425289       0.337148   
+1      1.0        0.348349       0.303483       0.287049       0.332643   
+
+  Z_test_RF_t07 Z_test_GB_t07  
+0      0.034037      0.037517  
+1      0.104347      0.107538  
+[94110.0, 94114.0, 94117.0, 94122.0, 94107.0, 94112.0, 94102.0, 94131.0, 94103.0, 94118.0, 94116.0, 94133.0, 94109.0, 94115.0, 94108.0, 94121.0, 94134.0, 94124.0, 94127.0, 94123.0, 94132.0, 94014.0, 94105.0, 94111.0, 94158.0, 94104.0, 94129.0, 94015.0, 94965.0]
+[94014.0, 94015.0, 94102.0, 94103.0, 94104.0, 94105.0, 94107.0, 94108.0, 94109.0, 94110.0, 94111.0, 94112.0, 94114.0, 94115.0, 94116.0, 94117.0, 94118.0, 94121.0, 94122.0, 94123.0, 94124.0, 94127.0, 94129.0, 94131.0, 94132.0, 94133.0, 94134.0, 94158.0, 94965.0]
+    zipcode Z_test_LIN_lt5c Z_test_RF_lt5c Z_test_GB_lt5c Z_test_LIN_t07  \
+0   94014.0        0.524340       0.751488       0.572727       0.656092   
+1   94015.0             NaN            NaN            NaN       0.157235   
+2   94102.0        0.471016       0.226141       0.188750       0.373348   
+3   94103.0        0.228332       0.195072       0.237023       0.253849   
+4   94104.0        0.200636       0.417291       0.234966       0.239702   
+5   94105.0        0.339571       0.322964       0.418168       0.254967   
+6   94107.0        0.250527       0.271589       0.305407       0.241993   
+7   94108.0        0.533817       0.341422       0.263795       0.444608   
+8   94109.0        0.414588       0.370240       0.309668       0.312590   
+9   94110.0        0.293379       0.293515       0.303478       0.283875   
+10  94111.0        0.168762       0.212209       0.124045       0.501805   
+11  94112.0        0.468777       0.446158       0.367802       0.501546   
+12  94114.0        0.245181       0.232609       0.254546       0.260072   
+13  94115.0        0.297864       0.284865       0.262143       0.252872   
+14  94116.0        0.408349       0.355816       0.257303       0.459915   
+15  94117.0        0.343305       0.234447       0.240697       0.287828   
+16  94118.0        0.366134       0.364822       0.376581       0.314668   
+17  94121.0        0.451025       0.426544       0.380667       0.336017   
+18  94122.0        0.358411       0.339453       0.303017       0.363689   
+19  94123.0        0.311876       0.272684       0.247367       0.268760   
+20  94124.0        0.719450       0.627199       0.554935       0.590924   
+21  94127.0        0.188229       0.223282       0.177436       0.312713   
+22  94129.0        0.051336       0.083759       0.003708       0.050504   
+23  94131.0        0.305768       0.287295       0.301600       0.286291   
+24  94132.0        0.616852       0.204352       0.259164       0.616582   
+25  94133.0        0.265594       0.254662       0.196771       0.280929   
+26  94134.0        0.486743       0.453123       0.407198       0.545368   
+27  94158.0        0.252058       0.197220       0.202969       0.268195   
+28  94965.0             NaN            NaN            NaN       0.304214   
+
+   Z_test_RF_t07 Z_test_GB_t07  
+0       0.396347      0.388502  
+1       0.227378      0.190827  
+2       0.061571      0.064893  
+3       0.095221      0.099162  
+4       0.092619      0.092785  
+5       0.080890      0.076534  
+6       0.081914      0.084457  
+7       0.067749      0.071438  
+8       0.075389      0.076633  
+9       0.092958      0.098099  
+10      0.068630      0.068684  
+11      0.114262      0.120075  
+12      0.094015      0.094721  
+13      0.091481      0.093893  
+14      0.187973      0.192005  
+15      0.114746      0.120636  
+16      0.062279      0.069710  
+17      0.091478      0.091262  
+18      0.134165      0.136145  
+19      0.210353      0.214686  
+20      0.130436      0.131089  
+21      0.070916      0.067835  
+22      0.043017      0.054589  
+23      0.090511      0.091687  
+24      0.194228      0.175608  
+25      0.066162      0.071211  
+26      0.168723      0.180679  
+27      0.243554      0.247658  
+28      0.011008      0.042268  
+MODELLING PROCESS COMPLETE !!!!!!!!!!!!!!!!!!!!!!! 

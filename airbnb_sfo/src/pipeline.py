@@ -52,12 +52,12 @@ def init():
 
 def read_data():
     print('\nREADING INPUT DATASET .................')
-    cal = pd.read_csv('calendar.csv.gz')
-    listd = pd.read_csv('listings.csv.gz')
-    lists = pd.read_csv('listings.csv')
-    revs = pd.read_csv('reviews.csv.gz')
-    nhood = pd.read_csv('neighbourhoods.csv')
-    purelst = pd.read_csv('listings.csv.gz')
+    cal = pd.read_csv('data/calendar.csv.gz')
+    listd = pd.read_csv('data/listings.csv.gz')
+    lists = pd.read_csv('data/listings.csv')
+    revs = pd.read_csv('data/reviews.csv.gz')
+    nhood = pd.read_csv('data/neighbourhoods.csv')
+    purelst = pd.read_csv('data/listings.csv.gz')
     # print(lists.head())
 
     print(cal.date.min(),cal.date.max())
@@ -175,8 +175,8 @@ def process_data(listd,dropzips):
        'host_total_listings_count', 'host_verifications',\
        'host_has_profile_pic', 'street',\
        'neighbourhood', 'neighbourhood_cleansed', 'city', 'state',\
-       'market', 'smart_location', 'country_code', 'country', 'latitude',\
-       'longitude', 'is_location_exact', 'property_type',\
+       'market', 'smart_location', 'country_code', 'country', \
+       'is_location_exact', 'property_type',\
        'amenities',\
        'weekly_price', 'monthly_price', 'security_deposit',\
        'extra_people', 'minimum_nights', 'calendar_updated',\
@@ -413,10 +413,11 @@ def run_randforest(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING RANDOM FOREST .................  :',name)
     print(X_train.head().T)
 
+    dropXcols = ['zipcode','latitude','longitude']
     Z_train=X_train.copy()
     Z_test=X_test.copy()
-    X_train.drop('zipcode',axis=1,inplace=True)
-    X_test.drop('zipcode',axis=1,inplace=True)
+    X_train.drop(dropXcols,axis=1,inplace=True)
+    X_test.drop(dropXcols,axis=1,inplace=True)
 
     regr = RandomForestRegressor(random_state=0)
     regr.fit(X_train, y_train)
@@ -489,10 +490,11 @@ def run_gradientboost(X_train,y_train,X_test,y_test,name):
     print('\nRUNNING GRADIENT BOOST REGRESSION .................  :',name)
     print(X_train.head().T)
 
+    dropXcols = ['zipcode','latitude','longitude']
     Z_train=X_train.copy()
     Z_test=X_test.copy()
-    X_train.drop('zipcode',axis=1,inplace=True)
-    X_test.drop('zipcode',axis=1,inplace=True)
+    X_train.drop(dropXcols,axis=1,inplace=True)
+    X_test.drop(dropXcols,axis=1,inplace=True)
     #X_train.drop('zipcode',axis=1,inplace=True)
     #X_test.drop('zipcode',axis=1,inplace=True)
 
@@ -574,10 +576,11 @@ def run_linreg(X_train,y_train,X_test,y_test,name):
     X_test=sm.add_constant(X_test,has_constant='add')
     print(X_train.head().T)
 
+    dropXcols = ['zipcode','latitude','longitude']
     Z_train=X_train.copy()
     Z_test=X_test.copy()
-    X_train.drop('zipcode',axis=1,inplace=True)
-    X_test.drop('zipcode',axis=1,inplace=True)
+    X_train.drop(dropXcols,axis=1,inplace=True)
+    X_test.drop(dropXcols,axis=1,inplace=True)
 
     # print(X_train.shape, y_train.shape, X_test.shape, y_test.shape)
     # print(X_train.head().T)
@@ -672,6 +675,7 @@ def pred_feature(pred_list,fname):
     dfnamelist=[fname]
     # pred_list=[Z_test,Z_test1]
     for dfx in pred_list:   #each predicted df
+        dfx.to_csv('output/zll_'+dfx.name+'.csv', sep=',')
         dfnamelist.append(dfx.name)
         fcurrlst=dfx[fname].value_counts().index
         for fcurr in fcurrlst:   #creating a list of unique indexes
@@ -706,6 +710,7 @@ def pred_feature(pred_list,fname):
 
     # plotdf.linreg_times = plotdf.linreg_times*0.9
     print(plotdf)
+    plotdf.to_csv('output/plots_'+fname+'.csv', sep=',')
     # dfj.append(pd.DataFrame(listj, columns=['col1','col2']),ignore_index=True)
     dfhead=dfnamelist[1:]
 
@@ -771,8 +776,8 @@ if __name__ == '__main__':
     # Running TimeSeries
     trainlist = ['listings_20180304.csv.gz','listings_20180406.csv.gz','listings_20180509.csv.gz']
     testlist = ['listings_20180705.csv.gz']
-    df_train = pd.concat([pd.read_csv(fcsv) for fcsv in trainlist],ignore_index=True)
-    df_test = pd.concat([pd.read_csv(fcsv) for fcsv in testlist],ignore_index=True)
+    df_train = pd.concat([pd.read_csv('data/'+fcsv) for fcsv in trainlist],ignore_index=True)
+    df_test = pd.concat([pd.read_csv('data/'+fcsv) for fcsv in testlist],ignore_index=True)
     # print('Shape of data after reading :',df_train.shape,df_test.shape)
     df_train=process_data(df_train,1)
     df_test=process_data(df_test,1)
@@ -813,6 +818,7 @@ if __name__ == '__main__':
 
     print('ANALYZING PREDICTIONS !!!!!!!!!!!!!')
     # pred_analysis([Z_test_LIN_lt5c,Z_test_LIN_t07],'linonly')
+    #pred_analysis([Z_test_LIN_lt5c,Z_test_RF_lt5c,Z_test_LIN_t07,Z_test_RF_t07],'NoGB')
     pred_analysis([Z_test_LIN_lt5c,Z_test_RF_lt5c,Z_test_GB_lt5c,Z_test_LIN_t07,Z_test_RF_t07,Z_test_GB_t07],'allmdls')
     print('MODELLING PROCESS COMPLETE !!!!!!!!!!!!!!!!!!!!!!! ')
 
