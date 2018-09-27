@@ -189,7 +189,7 @@ def process_data(listd,dropzips):
        'review_scores_value', 'requires_license', 'license',\
        'jurisdiction_names', 'instant_bookable', 'cancellation_policy',\
        'require_guest_profile_picture', 'require_guest_phone_verification',\
-       'calculated_host_listings_count', 'reviews_per_month','cleaning_fee']
+       'calculated_host_listings_count', 'reviews_per_month']
     listd.drop(listd_drop_cols2,axis=1,inplace=True )
 
     listd['host_is_superhost'] = (listd['host_is_superhost'] == True).astype(int)
