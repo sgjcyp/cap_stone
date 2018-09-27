@@ -28,5 +28,10 @@ The data was obtained from Insideairbnb.com.  After deep evaluation and cycles o
   - Some of the sparse outliers were breaking the model performance.   
   - Excluded the luxury listings, Model is limited to common listings
 
+### Results :
+
+The primary dataset was little complicated to analyze since the latent features are plenty based on the 96 primary features.  The initial models did not perform well but gave an inherent signature to help identify the outliers that could be imputed with no signal loss.  The resulting models with some tuning performed impressively resulting in an average prediction error of 10% or $15. 
+
+
 ### Tech used:
 Python, Pandas, Numpy, Matplotlib, statsmodels, Scikit-learn, Feature Engg, Modelling, Regression, gmaps
